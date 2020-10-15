@@ -11,7 +11,7 @@ exports.signIn = (req,res) => {
 }
 
 // Get page for signing up
-exports.signIn = (req,res) => {
+exports.signUp = (req,res) => {
     res.render('signUp', {
         title: "Create An Account"
     })

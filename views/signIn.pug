@@ -1,5 +1,22 @@
 extends layout
 
 block content
-    p This is a test page. Now it's been changed
-        input(type="text")
+    p
+        strong Email: <br/>
+            input(type="text")
+    p        
+        strong Password: <br/>
+            input(type="text")
+    p
+        strong I am signing in as a: <br/>
+        
+        <input type="radio" name="signInDescription" value="teacher">
+        <label for="teacher"> Teacher <br/>
+
+        <input type="radio" name="signInDescription" value="parent">
+        <label for="parent"> Parent <br/>
+    
+    p
+        input(type="submit" value="Sign In")
+    
+    a(href="/signUp") Or sign up if you don't have an account

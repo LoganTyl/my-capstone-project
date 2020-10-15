@@ -1,0 +1,30 @@
+extends layout
+
+block content
+    p
+        strong First Name: <br/>
+            input(type="text")
+    p        
+        strong Last Name: <br/>
+            input(type="text")
+    p        
+        strong Password: <br/>
+            input(type="text")
+    p        
+        strong Confirm Password: <br/>
+            input(type="text")
+    p        
+        strong Email: <br/>
+            input(type="text")
+    p
+        strong I am a: <br/>
+        
+        <input type="radio" name="signUpDescription" value="teacher">
+        <label for="teacher"> Teacher <br/>
+
+        <input type="radio" name="signUpDescription" value="parent">
+        <label for="parent"> Parent <br/>
+    p
+        input(type="submit" value="Sign Up")
+    
+    a(href="/signIn") Sign In Instead
