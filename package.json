@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -20,9 +21,11 @@
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "mysql": "^2.18.1",
+    "nodemon": "^2.0.5",
     "path": "^0.12.7",
     "pug": "^3.0.0"
   }

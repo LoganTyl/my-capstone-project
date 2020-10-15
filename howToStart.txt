@@ -1,0 +1,2 @@
+- "npm i" to download node modules
+- run npm start (full command in package.json)
