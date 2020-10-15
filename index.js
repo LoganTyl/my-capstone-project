@@ -28,6 +28,8 @@ let urlencodedParser = bodyParser.urlencoded({
 
 app.get('/', route.root);
 app.get('/signIn', route.signIn);
+app.post('/signIn', urlencodedParser, route.processSignIn);
 app.get('/signUp', route.signUp);
+app.post('/signUp', urlencodedParser, route.processSignUp);
 
 app.listen(3000);

@@ -1,22 +1,23 @@
 extends layout
 
 block content
-    p
-        strong Email: <br/>
-            input(type="text" id="signInEmail")
-    p        
-        strong Password: <br/>
-            input(type="text" id="signInPassword")
-    p
-        strong I am signing in as a: <br/>
+    form(method="POST" action="" onsubmit="return checkSignIn()")
+        p
+            strong Email: <br/>
+                input(type="text" id="signInEmail" name="email")
+        p        
+            strong Password: <br/>
+                input(type="text" id="signInPassword" name="password")
+        p
+            strong I am signing in as a: <br/>
 
-        <input type="radio" name="signInDescription" value="teacher" id="signInAsTeacher">
-        <label for="teacher"> Teacher <br/>
+            <input type="radio" name="signInDescription" value="teacher" id="signInAsTeacher">
+            <label for="teacher"> Teacher <br/>
 
-        <input type="radio" name="signInDescription" value="parent" id="signInAsParent">
-        <label for="parent"> Parent <br/>
-    
-    p
-        input(type="submit" value="Sign In")
+            <input type="radio" name="signInDescription" value="parent" id="signInAsParent">
+            <label for="parent"> Parent <br/>
+        
+        p
+            input(type="submit" value="Sign In")
     
     a(href="/signUp") Or sign up if you don't have an account
