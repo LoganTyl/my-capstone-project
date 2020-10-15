@@ -3,17 +3,17 @@ extends layout
 block content
     p
         strong Email: <br/>
-            input(type="text")
+            input(type="text" id="signInEmail")
     p        
         strong Password: <br/>
-            input(type="text")
+            input(type="text" id="signInPassword")
     p
         strong I am signing in as a: <br/>
-        
-        <input type="radio" name="signInDescription" value="teacher">
+
+        <input type="radio" name="signInDescription" value="teacher" id="signInAsTeacher">
         <label for="teacher"> Teacher <br/>
 
-        <input type="radio" name="signInDescription" value="parent">
+        <input type="radio" name="signInDescription" value="parent" id="signInAsParent">
         <label for="parent"> Parent <br/>
     
     p

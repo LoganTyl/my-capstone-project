@@ -1,3 +1,16 @@
+const bcrypt = require('bcrypt-nodejs');
+
+const mysql = require('mysql');
+const connection = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "capstone_db"
+})
+
+// connection.connect() to start
+// connection.end() to end
+
 // Redirects to sign in page if root page is called
 exports.root = (req,res) => {
     res.redirect('/signIn')

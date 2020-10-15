@@ -3,26 +3,26 @@ extends layout
 block content
     p
         strong First Name: <br/>
-            input(type="text")
+            input(type="text" id="signUpFName")
     p        
         strong Last Name: <br/>
-            input(type="text")
+            input(type="text" id="signUpLName")
     p        
         strong Password: <br/>
-            input(type="text")
+            input(type="text" id="signUpPassword")
     p        
         strong Confirm Password: <br/>
-            input(type="text")
+            input(type="text" id="signUpPasswordConfirm")
     p        
         strong Email: <br/>
-            input(type="text")
+            input(type="text" id="signUpEmail")
     p
         strong I am a: <br/>
         
-        <input type="radio" name="signUpDescription" value="teacher">
+        <input type="radio" name="signUpDescription" value="teacher" id="signUpAsTeacher">
         <label for="teacher"> Teacher <br/>
 
-        <input type="radio" name="signUpDescription" value="parent">
+        <input type="radio" name="signUpDescription" value="parent" id="signUpAsParent">
         <label for="parent"> Parent <br/>
     p
         input(type="submit" value="Sign Up")
