@@ -14,7 +14,7 @@ const parentSignUp = document.getElementById("signUpAsParent");
 
 
 const checkSignIn = () => {
-    if(emailSignIn.value.trim() === "" || passwordSignIn.value.trim() === "" || (!teacherSignIn && !passwordSignIn)){
+    if(emailSignIn.value.trim() === "" || passwordSignIn.value.trim() === "" || !(teacherSignIn.checked || parentSignIn.checked)){
         return false;
     }
     return true;
@@ -22,7 +22,12 @@ const checkSignIn = () => {
 
 const checkSignUp = () => {
     if(fNameSignUp.value.trim() === "" || lNameSignUp.value.trim() === "" || passwordSignUp.value.trim() === "" || 
-    passwordConfirmSignUp.value.trim() === "" || emailSignUp.value.trim() === "" || (!teacherSignUp && !passwordSignUp)){
+    passwordConfirmSignUp.value.trim() === "" || emailSignUp.value.trim() === "" || !(teacherSignUp.checked || parentSignUp.checked)){
+        console.log("Empty field");
+        return false;
+    }
+    if(passwordSignUp.value !== passwordConfirmSignUp.value){
+        console.log(`Passwords don't match ${passwordSignUp} and ${passwordConfirmSignUp}`);
         return false;
     }
     return true;
