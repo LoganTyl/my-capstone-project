@@ -1,0 +1,14 @@
+extends layout
+
+block content
+    form(method="POST" action="" onsubmit="return checkCreateStudent()")
+        p
+            strong First Name: <br/>
+                input(type="text" id="createStudentFName" name="fName")
+        p        
+            strong Last Name: <br/>
+                input(type="text" id="createStudentLName" name="lName")
+        p
+            input(type="submit" value="Sign Up")
+    
+    a(href="/signIn") Sign In Instead

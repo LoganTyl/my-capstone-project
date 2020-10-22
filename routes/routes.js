@@ -133,3 +133,9 @@ exports.processSignUp = (req,res) => {
         }
     })
 };
+
+exports.teacherHome = (req,res) => {
+    res.render('teacherHome', {
+        title: "My Class"
+    })
+}
