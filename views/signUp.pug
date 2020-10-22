@@ -1,0 +1,31 @@
+extends layout
+
+block content
+    form(method="POST" action="" onsubmit="return checkSignUp()")
+        p
+            strong First Name: <br/>
+                input(type="text" id="signUpFName" name="fName")
+        p        
+            strong Last Name: <br/>
+                input(type="text" id="signUpLName" name="lName")
+        p        
+            strong Password: <br/>
+                input(type="text" id="signUpPassword" name="password")
+        p        
+            strong Confirm Password: <br/>
+                input(type="text" id="signUpPasswordConfirm" name="passwordConfirm")
+        p        
+            strong Email: <br/>
+                input(type="text" id="signUpEmail" name="email")
+        p
+            strong I am a: <br/>
+            
+            <input type="radio" name="signUpDescription" value="teacher" id="signUpAsTeacher">
+            <label for="teacher"> Teacher <br/>
+
+            <input type="radio" name="signUpDescription" value="parent" id="signUpAsParent">
+            <label for="parent"> Parent <br/>
+        p
+            input(type="submit" value="Sign Up")
+    
+    a(href="/signIn") Sign In Instead
