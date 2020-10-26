@@ -35,13 +35,17 @@ app.post('/signUp', urlencodedParser, route.processSignUp);
 //Teacher Only Pages
 app.get('/teacher/home', route.teacherHome);
 app.get('/teacher/addStudent', route.teacherAddStudent);
-app.post('/teacher/addStudent', urlencodedParser, route.teacherProcessAddStudent);
+// app.post('/teacher/addStudent', urlencodedParser, route.teacherProcessAddStudent);
 app.get('/teacher/editStudent', route.teacherEditStudent);
-app.post('/teacher/editStudent', urlencodedParser, route.teacherProcessEditStudent);
-app.delete('/teacher/editStudent', urlencodedParser, route.teacherDeleteStudent);
+// app.put('/teacher/editStudent', urlencodedParser, route.teacherProcessEditStudent);
+// app.delete('/teacher/editStudent', urlencodedParser, route.teacherDeleteStudent);
 app.get('/teacher/chatMenu', route.teacherChatMenu);
 app.get('/teacher/chatroom', route.teacherChatroom);
 
 //Parent Only Pages
-
+app.get('/parent/selectStudent', route.parentSelectStudent);
+app.get('/parent/home', route.parentHome);
+app.get('/parent/recordLog', route.parentRecordLog);
+app.get('/parent/emailForm', route.parentEmailForm);
+app.get('/parent/chatroom', route.parentChatroom);
 app.listen(3000);

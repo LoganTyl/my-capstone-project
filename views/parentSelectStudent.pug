@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    //- Loop through students the parent has on file
+    div(class="studentSelection")
+        p John Bob
+    
+    form(id="studentCodeForm" method="POST" action="/" onsubmit="" class="form")
+        label(for="studentCodeInput") Enter a student code to view another student
+            input(type="text" id="studentCodeInput" name="studentCode")
+        
+        input(type='submit' class='btn' value='Search')

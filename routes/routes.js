@@ -12,6 +12,8 @@ connection.connect(err => {
     if(err) throw err;
 });
 
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
 // Redirects to sign in page if root page is called
 exports.root = (req,res) => {
     res.redirect('/signIn')
@@ -135,7 +137,66 @@ exports.processSignUp = (req,res) => {
 };
 
 exports.teacherHome = (req,res) => {
+    let currentDate = new Date();
+    let month = months[currentDate.getMonth()];
+    let day = String(currentDate.getDate()).padStart(2,'0');
+    let year = currentDate.getFullYear();
     res.render('teacherHome', {
-        title: "My Class"
+        title: "My Class",
+        date: `${month} ${day}, ${year}`
+    })
+}
+
+exports.teacherAddStudent = (req,res) => {
+    res.render('teacherAddStudent', {
+        title: "Add Student"
+    })
+}
+
+exports.teacherEditStudent = (req,res) => {
+    res.render('teacherEditStudent', {
+        title: "Edit Student"
+    })
+}
+
+exports.teacherChatMenu = (req,res) => {
+    res.render('teacherChatMenu', {
+        title: "Choose Parent to Chat With"
+    })
+}
+
+exports.teacherChatroom = (req,res) => {
+    res.render('teacherChatroom', {
+        title: "Chatroom"
+    })
+}
+
+exports.parentSelectStudent = (req,res) => {
+    res.render('parentSelectStudent', {
+        title: "Select Student"
+    })
+}
+
+exports.parentHome = (req,res) => {
+    res.render('parentHome', {
+        title: "Student's Page"
+    })
+}
+
+exports.parentRecordLog = (req,res) => {
+    res.render('parentRecordLog', {
+        title: "Student's Records"
+    })
+}
+
+exports.parentEmailForm = (req,res) => {
+    res.render('parentEmailForm', {
+        title: "Send an Email"
+    })
+}
+
+exports.parentChatroom = (req,res) => {
+    res.render('parentChatroom', {
+        title: "Chatroom"
     })
 }
