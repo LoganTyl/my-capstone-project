@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    form(id="sendEmail" method="POST" action="/" onsubmit="" class="form")
+        label(for="emailFormName")
+            input(type="text" id="emailFormName" name="emailName" value="")
+        label(for="emailFormEmail")
+            input(type="text" id="emailFormEmail" name="emailEmail" value="")
+        label(for="emailFormSubject")
+            input(type="text" id="emailFormSubject" name="emailSubject")
+        input(type="text" id="emailFormBody" name="emailBody")
+        input(type="submit" class="btn" value="Send")

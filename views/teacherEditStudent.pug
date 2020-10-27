@@ -1,7 +1,7 @@
 extends layout
 
 block content
-    form(method="POST" action="" onsubmit="return checkCreateStudent()")
+    form(method="PUT" action="" onsubmit="return checkEditStudent()")
         p
             strong First Name: <br/>
                 input(type="text" id="createStudentFName" name="fName" value="")
@@ -9,6 +9,7 @@ block content
             strong Last Name: <br/>
                 input(type="text" id="createStudentLName" name="lName" value="")
         p
-            input(type="submit" value="Sign Up")
-    
-    a(href="/signIn") Sign In Instead
+            input(type="submit" value="Save")
+    form(method="DELETE")
+        p
+            input(type="submit" value="Delete Student")  
