@@ -1,12 +1,12 @@
-extends layout
+extends parentLayout
 
 block content
     form(id="sendEmail" method="POST" action="/" onsubmit="" class="form")
-        label(for="emailFormName")
+        label(for="emailFormName") Your Name
             input(type="text" id="emailFormName" name="emailName" value="")
-        label(for="emailFormEmail")
+        label(for="emailFormEmail") Your Email
             input(type="text" id="emailFormEmail" name="emailEmail" value="")
-        label(for="emailFormSubject")
+        label(for="emailFormSubject") Email Subject
             input(type="text" id="emailFormSubject" name="emailSubject")
         input(type="text" id="emailFormBody" name="emailBody")
         input(type="submit" class="btn" value="Send")

@@ -1,0 +1,18 @@
+doctype html
+html
+    head
+        link(href='/style.css' rel="stylesheet")
+    body
+        div(id="teacherSideNav" class="sideNav")
+            a(href="javascript:void(0)" class="closeBtn") &times;
+            a(href="/teacher/home") Home
+            a(href="/teacher/addStudent") Add Student
+            a(href="/teacher/editStudent") Edit Student
+            a(href="/teacher/chatMenu") Chatroom Menu
+
+        div(id="teacherMain")
+            span(class="burgerIcon") &#9776;
+            title #{title}
+            h1 #{title}
+            block content
+            script(src="/teacheBackend.js")
