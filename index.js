@@ -22,6 +22,14 @@ app.use(expressSession({
     resave: true
 }));
 
+const checkAuth = (req,res,next) => {
+    if(req.session.user && req.session.user.isAuthenticated) {
+        next();
+    } else {
+        res.redirect('/');
+    }
+};
+
 let urlencodedParser = bodyParser.urlencoded({
     extended: false
 });
@@ -31,21 +39,22 @@ app.get('/signIn', route.signIn);
 app.post('/signIn', urlencodedParser, route.processSignIn);
 app.get('/signUp', route.signUp);
 app.post('/signUp', urlencodedParser, route.processSignUp);
+app.get('/logout', route.logout)
 
 //Teacher Only Pages
-app.get('/teacher/home', route.teacherHome);
-app.get('/teacher/addStudent', route.teacherAddStudent);
+app.get('/teacher/home', checkAuth, route.teacherHome);
+app.get('/teacher/addStudent', checkAuth, route.teacherAddStudent);
 // app.post('/teacher/addStudent', urlencodedParser, route.teacherProcessAddStudent);
-app.get('/teacher/editStudent', route.teacherEditStudent);
+app.get('/teacher/editStudent', checkAuth, route.teacherEditStudent);
 // app.put('/teacher/editStudent', urlencodedParser, route.teacherProcessEditStudent);
 // app.delete('/teacher/editStudent', urlencodedParser, route.teacherDeleteStudent);
-app.get('/teacher/chatMenu', route.teacherChatMenu);
-app.get('/teacher/chatroom', route.teacherChatroom);
+app.get('/teacher/chatMenu', checkAuth, route.teacherChatMenu);
+app.get('/teacher/chatroom', checkAuth, route.teacherChatroom);
 
 //Parent Only Pages
-app.get('/parent/selectStudent', route.parentSelectStudent);
-app.get('/parent/home', route.parentHome);
-app.get('/parent/recordLog', route.parentRecordLog);
-app.get('/parent/emailForm', route.parentEmailForm);
-app.get('/parent/chatroom', route.parentChatroom);
+app.get('/parent/selectStudent', checkAuth, route.parentSelectStudent);
+app.get('/parent/home', checkAuth, route.parentHome);
+app.get('/parent/recordLog', checkAuth, route.parentRecordLog);
+app.get('/parent/emailForm', checkAuth, route.parentEmailForm);
+app.get('/parent/chatroom', checkAuth, route.parentChatroom);
 app.listen(3000);

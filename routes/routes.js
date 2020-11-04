@@ -56,14 +56,22 @@ exports.processSignIn = (req,res) => {
                 // Add similar response to one above
                 if(response){
                     if(queriedTable === "Teacher"){
-                        res.render('signIn', {
-                            title: "Teacher" + queryResult
-                        })
+                        req.session.user = {
+                            isAuthenticated: true,
+                            mySqlId: queryResult.teacherId,
+                            firstName: queryResult.firstName,
+                            lastName: queryResult.lastName
+                        }
+                        res.redirect('teacher/home');
                     }
                     else{
-                        res.render('signIn', {
-                            title: "Parent" + queryResult
-                        })
+                        req.session.user = {
+                            isAuthenticated: true,
+                            mySqlId: queryResult.parentId,
+                            firstName: queryResult.firstName,
+                            lastName: queryResult.lastName
+                        }
+                        res.redirect('parent/selectStudent');
                     }
                 }
                 else{
@@ -136,13 +144,23 @@ exports.processSignUp = (req,res) => {
     })
 };
 
+exports.logout = (req,res) => {
+    req.session.destroy(err => {
+        if(err) {
+            console.log(err);
+        } else {
+            res.redirect('/');
+        }
+    });
+}
+
 exports.teacherHome = (req,res) => {
     let currentDate = new Date();
     let month = months[currentDate.getMonth()];
     let day = String(currentDate.getDate()).padStart(2,'0');
     let year = currentDate.getFullYear();
     res.render('teacherHome', {
-        title: "My Class",
+        title: `${req.session.user.firstName}'s Home`,
         date: `${month} ${day}, ${year}`
     })
 }
