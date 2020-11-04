@@ -190,8 +190,23 @@ exports.teacherChatroom = (req,res) => {
 }
 
 exports.parentSelectStudent = (req,res) => {
-    res.render('parentSelectStudent', {
-        title: "Select Student"
+    connection.query(`SELECT * FROM parent WHERE parentId=${req.session.user.mySqlId}`, (err,result,fields) => {
+        if (err) throw err;
+        let studentIDs = result[0].savedStudents;
+        studentIDs = JSON.parse(studentIDs);
+        let idRange = "(";
+        studentIDs.forEach(studentID => {
+            idRange = `${idRange}${studentID},`
+        });
+        idRange = idRange.slice(0,-1)+')';
+        connection.query(`SELECT * FROM student WHERE studentId IN ${idRange}`, (err,studentResult,fields) => {
+            console.log(studentResult);
+            res.render('parentSelectStudent', {
+                title: "Select Student",
+                students: studentResult,
+                isEmptyStudents: (studentResult == undefined ? true : false)
+            })
+        })
     })
 }
 

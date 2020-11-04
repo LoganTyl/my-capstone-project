@@ -3,7 +3,11 @@ extends parentLayout
 block content
     //- Loop through students the parent has on file
     div(class="studentSelection")
-        p John Bob
+        if isEmptyStudents
+            p No students logged currently. Add a code to get started!
+        else
+            each student in students
+                p #{student.firstName} #{student.lastName}
     
     form(id="studentCodeForm" method="POST" action="/" onsubmit="" class="form")
         label(for="studentCodeInput") Enter a student code to view another student
