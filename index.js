@@ -22,8 +22,16 @@ app.use(expressSession({
     resave: true
 }));
 
-const checkAuth = (req,res,next) => {
-    if(req.session.user && req.session.user.isAuthenticated) {
+const checkTeacherAuth = (req,res,next) => {
+    if(req.session.user && req.session.user.isAuthenticated && req.session.user.isTeacher) {
+        next();
+    } else {
+        res.redirect('/');
+    }
+};
+
+const checkParentAuth = (req,res,next) => {
+    if(req.session.user && req.session.user.isAuthenticated && !req.session.user.isTeacher) {
         next();
     } else {
         res.redirect('/');
@@ -42,19 +50,22 @@ app.post('/signUp', urlencodedParser, route.processSignUp);
 app.get('/logout', route.logout)
 
 //Teacher Only Pages
-app.get('/teacher/home', checkAuth, route.teacherHome);
-app.get('/teacher/addStudent', checkAuth, route.teacherAddStudent);
-// app.post('/teacher/addStudent', urlencodedParser, route.teacherProcessAddStudent);
-app.get('/teacher/editStudent', checkAuth, route.teacherEditStudent);
-// app.put('/teacher/editStudent', urlencodedParser, route.teacherProcessEditStudent);
-// app.delete('/teacher/editStudent', urlencodedParser, route.teacherDeleteStudent);
-app.get('/teacher/chatMenu', checkAuth, route.teacherChatMenu);
-app.get('/teacher/chatroom', checkAuth, route.teacherChatroom);
+app.get('/teacher/home', checkTeacherAuth, route.teacherHome);
+app.get('/teacher/addStudent', checkTeacherAuth, route.teacherAddStudent);
+app.post('/teacher/addStudent', urlencodedParser, route.teacherProcessAddStudent);
+app.get('/teacher/editStudent/:id', checkTeacherAuth, route.teacherEditStudent);
+// app.post('/teacher/editStudent/:id', urlencodedParser, route.teacherProcessEditStudent);
+app.get('/teacher/deleteStudent/:id', urlencodedParser, route.teacherDeleteStudent);
+app.get('/teacher/chatMenu', checkTeacherAuth, route.teacherChatMenu);
+app.get('/teacher/chatroom', checkTeacherAuth, route.teacherChatroom);
 
 //Parent Only Pages
-app.get('/parent/selectStudent', checkAuth, route.parentSelectStudent);
-app.get('/parent/home', checkAuth, route.parentHome);
-app.get('/parent/recordLog', checkAuth, route.parentRecordLog);
-app.get('/parent/emailForm', checkAuth, route.parentEmailForm);
-app.get('/parent/chatroom', checkAuth, route.parentChatroom);
+app.get('/parent/selectStudent', checkParentAuth, route.parentSelectStudent);
+app.get('/parent/home', checkParentAuth, route.parentHome);
+app.get('/parent/recordLog', checkParentAuth, route.parentRecordLog);
+app.get('/parent/emailForm', checkParentAuth, route.parentEmailForm);
+app.get('/parent/chatroom', checkParentAuth, route.parentChatroom);
+
+//Catch Statements
+app.get('/:excess', route.root);
 app.listen(3000);

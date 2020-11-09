@@ -13,6 +13,15 @@ connection.connect(err => {
 });
 
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const allChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+const makeID = length => {
+    let result = "";
+    for(let i = 0; i < length; i++){
+        result += allChars.charAt(Math.floor(Math.random() * allChars.length));
+    }
+    return result;
+}
 
 // Redirects to sign in page if root page is called
 exports.root = (req,res) => {
@@ -58,6 +67,7 @@ exports.processSignIn = (req,res) => {
                     if(queriedTable === "Teacher"){
                         req.session.user = {
                             isAuthenticated: true,
+                            isTeacher: true,
                             mySqlId: queryResult.teacherId,
                             firstName: queryResult.firstName,
                             lastName: queryResult.lastName
@@ -67,6 +77,7 @@ exports.processSignIn = (req,res) => {
                     else{
                         req.session.user = {
                             isAuthenticated: true,
+                            isTeacher: false,
                             mySqlId: queryResult.parentId,
                             firstName: queryResult.firstName,
                             lastName: queryResult.lastName
@@ -108,7 +119,6 @@ exports.processSignUp = (req,res) => {
     }
     connection.query(`SELECT * FROM ${whoIsSigningUp} WHERE email='${req.body.email}'`, (err, result, fields) => {
         if (err) throw err;
-        console.log(result);
         if(result.length == 0){
             bcrypt.hash(req.body.password, null, null, (err,hash) => {
                 myHash = hash;
@@ -122,7 +132,6 @@ exports.processSignUp = (req,res) => {
                     connection.query(`INSERT INTO Teacher (firstName,lastName,email,password,classOfStudents,presetNotes) ` + 
                     `VALUES ('${fName}', '${lName}', '${email}', '${password}', '[]', '${presetNotes}')`, (err, result) => {
                         if (err) throw err;
-                        console.log("Teacher inserted");
                         queryResult = result;
                     })
                 }
@@ -130,7 +139,6 @@ exports.processSignUp = (req,res) => {
                     connection.query(`INSERT INTO Parent (firstName,lastName,email,password,savedStudents) ` + 
                     `VALUES ('${fName}', '${lName}', '${email}', '${password}', '[]')`, (err, result) => {
                         if (err) throw err;
-                        console.log("Parent inserted");
                         queryResult = result;
                     })
                 }
@@ -159,10 +167,27 @@ exports.teacherHome = (req,res) => {
     let month = months[currentDate.getMonth()];
     let day = String(currentDate.getDate()).padStart(2,'0');
     let year = currentDate.getFullYear();
-    res.render('teacherHome', {
-        title: `${req.session.user.firstName}'s Home`,
-        date: `${month} ${day}, ${year}`
+
+    connection.query(`SELECT * FROM teacher WHERE teacherId=${req.session.user.mySqlId}`, (err,result,fields) => {
+        if (err) throw err;
+        let classIDs = result[0].classOfStudents;
+        classIDs = JSON.parse(classIDs);
+        let idRange = "(";
+        classIDs.forEach(studentID => {
+            idRange = `${idRange}${studentID},`
+        });
+        idRange = idRange.slice(0,-1)+')';
+        connection.query(`SELECT * FROM student WHERE studentId IN ${idRange}`, (err,classResult,fields) => {
+            // Might need to query for each student's ratings on that day
+            res.render('teacherHome', {
+                title: `${req.session.user.firstName}'s Home`,
+                date: `${month} ${day}, ${year}`,
+                myClass: classResult,
+                isEmptyClass: (classResult == undefined ? true : false)
+            })
+        })
     })
+
 }
 
 exports.teacherAddStudent = (req,res) => {
@@ -171,9 +196,58 @@ exports.teacherAddStudent = (req,res) => {
     })
 }
 
+exports.teacherProcessAddStudent = (req,res) => {
+    let firstName = req.body.fName;
+    let lastName = req.body.lName;
+    let parentCode = makeID(10);
+    connection.query(`INSERT INTO student (firstName,lastName,parentCode,ratings) ` + 
+    `VALUES ('${firstName}', '${lastName}', '${parentCode}', '[]')`, (err,studentInsertResult) => {
+        if(err) throw err;
+        connection.query(`SELECT * FROM teacher WHERE teacherId=${req.session.user.mySqlId}`, (err,getTeacherResult) => {
+            if(err) throw err;
+            connection.query(`SELECT CONVERT(LAST_INSERT_ID(),CHAR) AS 'ConvertResult'`,(err,convertResult) => {
+                if(err) throw err;
+                connection.query(`SELECT JSON_ARRAY_APPEND('${getTeacherResult[0].classOfStudents}','$','${convertResult[0].ConvertResult}') AS 'Result'`, (err,result) =>{
+                    if(err) throw err;
+                    connection.query(`UPDATE teacher SET classOfStudents='${result[0].Result}' WHERE teacherId=${req.session.user.mySqlId}`, (err,updateResult) => {
+                        if(err) throw err;
+                        res.redirect('/teacher/home');
+                    })
+                })
+            })
+        })
+    })
+
+}
+
 exports.teacherEditStudent = (req,res) => {
-    res.render('teacherEditStudent', {
-        title: "Edit Student"
+    let id = req.params.id;
+    connection.query(`SELECT * FROM student WHERE studentId=${id}`, (err,result) => {
+        if(err) throw err;
+        res.render('teacherEditStudent', {
+            title: "Edit Student",
+            student: result[0]
+        })
+    })
+}
+
+exports.teacherDeleteStudent = (req,res) => {
+    let id = req.params.id;
+    connection.query(`DELETE FROM student WHERE studentId=${id}`, (err,result) => {
+        if(err) throw err;
+        connection.query(`SELECT * FROM teacher WHERE teacherId=${req.session.user.mySqlId}`, (err,getTeacherResult) => {
+            if(err) throw err;
+            connection.query(`SELECT JSON_SEARCH('${getTeacherResult[0].classOfStudents}','one','${id}') AS 'StudentIndex'`, (err,studentIndexResult) => {
+                if(err) throw err;
+                connection.query(`SELECT JSON_REMOVE('${getTeacherResult[0].classOfStudents}', ${studentIndexResult[0].StudentIndex}) AS 'Result'`, (err,result) => {
+                    if(err) throw err;
+                    connection.query(`UPDATE teacher SET classOfStudents='${result[0].Result}' WHERE teacherId=${req.session.user.mySqlId}`, (err,updateResult) => {
+                        if(err) throw err;
+                        res.redirect('/teacher/home');
+                    })
+                })
+            })
+        })
     })
 }
 
