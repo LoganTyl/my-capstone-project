@@ -54,7 +54,7 @@ app.get('/teacher/home', checkTeacherAuth, route.teacherHome);
 app.get('/teacher/addStudent', checkTeacherAuth, route.teacherAddStudent);
 app.post('/teacher/addStudent', urlencodedParser, route.teacherProcessAddStudent);
 app.get('/teacher/editStudent/:id', checkTeacherAuth, route.teacherEditStudent);
-// app.post('/teacher/editStudent/:id', urlencodedParser, route.teacherProcessEditStudent);
+app.post('/teacher/editStudent/:id', urlencodedParser, route.teacherProcessEditStudent);
 app.get('/teacher/deleteStudent/:id', urlencodedParser, route.teacherDeleteStudent);
 app.get('/teacher/chatMenu', checkTeacherAuth, route.teacherChatMenu);
 app.get('/teacher/chatroom', checkTeacherAuth, route.teacherChatroom);

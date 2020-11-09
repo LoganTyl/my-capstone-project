@@ -231,6 +231,16 @@ exports.teacherEditStudent = (req,res) => {
     })
 }
 
+exports.teacherProcessEditStudent = (req,res) => {
+    let id = req.params.id;
+    let newFName = req.body.fName;
+    let newLName = req.body.lName;
+    connection.query(`UPDATE student SET firstName='${newFName}', lastName='${newLName}' WHERE studentId=${id}`, (err,result) => {
+        if(err) throw err;
+        res.redirect('/teacher/home')
+    })
+}
+
 exports.teacherDeleteStudent = (req,res) => {
     let id = req.params.id;
     connection.query(`DELETE FROM student WHERE studentId=${id}`, (err,result) => {
@@ -241,7 +251,7 @@ exports.teacherDeleteStudent = (req,res) => {
                 if(err) throw err;
                 connection.query(`SELECT JSON_REMOVE('${getTeacherResult[0].classOfStudents}', ${studentIndexResult[0].StudentIndex}) AS 'Result'`, (err,result) => {
                     if(err) throw err;
-                    connection.query(`UPDATE teacher SET classOfStudents='${result[0].Result}' WHERE teacherId=${req.session.user.mySqlId}`, (err,updateResult) => {
+                    connection.query(`UPDATE teacher SET classOfStudents='${result[0].Result}' WHERE teacherId=${req.session.user.mySqlId}`, (err,result) => {
                         if(err) throw err;
                         res.redirect('/teacher/home');
                     })
