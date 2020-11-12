@@ -129,14 +129,14 @@ exports.processSignUp = (req,res) => {
                 if(queriedTable === "Teacher"){
                     let presetNotes = ["Good day", "Did not get much work done", "Had trouble listening"];
                     presetNotes = JSON.stringify(presetNotes);
-                    connection.query(`INSERT INTO Teacher (firstName,lastName,email,password,classOfStudents,presetNotes) ` + 
-                    `VALUES ('${fName}', '${lName}', '${email}', '${password}', '[]', '${presetNotes}')`, (err, result) => {
+                    connection.query(`INSERT INTO Teacher (firstName,lastName,email,password,presetNotes) ` + 
+                    `VALUES ('${fName}', '${lName}', '${email}', '${password}','${presetNotes}')`, (err, result) => {
                         if (err) throw err;
                     })
                 }
                 else{
-                    connection.query(`INSERT INTO Parent (firstName,lastName,email,password,savedStudents) ` + 
-                    `VALUES ('${fName}', '${lName}', '${email}', '${password}', '[]')`, (err, result) => {
+                    connection.query(`INSERT INTO Parent (firstName,lastName,email,password) ` + 
+                    `VALUES ('${fName}', '${lName}', '${email}', '${password}')`, (err, result) => {
                         if (err) throw err;
                     })
                 }
@@ -166,13 +166,11 @@ exports.teacherHome = (req,res) => {
     let day = String(currentDate.getDate()).padStart(2,'0');
     let year = currentDate.getFullYear();
 
-    connection.query(`SELECT * FROM teacher WHERE teacherId=${req.session.user.mySqlId}`, (err,result,fields) => {
-        if (err) throw err;
-        let classIDs = result[0].classOfStudents;
-        classIDs = JSON.parse(classIDs);
+    connection.query(`SELECT * FROM teacherandstudent WHERE teacherId=${req.session.user.mySqlId}`, (err,result) => {
+        if(err) throw err;
         let idRange = "(";
-        classIDs.forEach(studentID => {
-            idRange = `${idRange}${studentID},`
+        result.forEach(studentID => {
+            idRange = `${idRange}${studentID.studentId},`
         });
         idRange = idRange.slice(0,-1)+')';
         connection.query(`SELECT * FROM student WHERE studentId IN ${idRange}`, (err,classResult,fields) => {
@@ -185,7 +183,6 @@ exports.teacherHome = (req,res) => {
             })
         })
     })
-
 }
 
 exports.teacherAddStudent = (req,res) => {
@@ -198,21 +195,12 @@ exports.teacherProcessAddStudent = (req,res) => {
     let firstName = req.body.fName;
     let lastName = req.body.lName;
     let parentCode = makeID(10);
-    connection.query(`INSERT INTO student (firstName,lastName,parentCode,ratings) ` + 
-    `VALUES ('${firstName}', '${lastName}', '${parentCode}', '[]')`, (err,studentInsertResult) => {
+    connection.query(`INSERT INTO student (firstName,lastName,parentCode) ` + 
+    `VALUES ('${firstName}', '${lastName}', '${parentCode}')`, (err,studentInsertResult) => {
         if(err) throw err;
-        connection.query(`SELECT * FROM teacher WHERE teacherId=${req.session.user.mySqlId}`, (err,getTeacherResult) => {
+        connection.query(`INSERT INTO teacherandstudent (teacherId,studentId) VALUES (${req.session.user.mySqlId}, LAST_INSERT_ID())`, (err,result) => {
             if(err) throw err;
-            connection.query(`SELECT CONVERT(LAST_INSERT_ID(),CHAR) AS 'ConvertResult'`,(err,convertResult) => {
-                if(err) throw err;
-                connection.query(`SELECT JSON_ARRAY_APPEND('${getTeacherResult[0].classOfStudents}','$','${convertResult[0].ConvertResult}') AS 'Result'`, (err,result) =>{
-                    if(err) throw err;
-                    connection.query(`UPDATE teacher SET classOfStudents='${result[0].Result}' WHERE teacherId=${req.session.user.mySqlId}`, (err,updateResult) => {
-                        if(err) throw err;
-                        res.redirect('/teacher/home');
-                    })
-                })
-            })
+            res.redirect('/teacher/home');
         })
     })
 
@@ -243,18 +231,9 @@ exports.teacherDeleteStudent = (req,res) => {
     let id = req.params.id;
     connection.query(`DELETE FROM student WHERE studentId=${id}`, (err,result) => {
         if(err) throw err;
-        connection.query(`SELECT * FROM teacher WHERE teacherId=${req.session.user.mySqlId}`, (err,getTeacherResult) => {
+        connection.query(`DELETE FROM teacherandstudent WHERE studentId=${id}`, (err,result) => {
             if(err) throw err;
-            connection.query(`SELECT JSON_SEARCH('${getTeacherResult[0].classOfStudents}','one','${id}') AS 'StudentIndex'`, (err,studentIndexResult) => {
-                if(err) throw err;
-                connection.query(`SELECT JSON_REMOVE('${getTeacherResult[0].classOfStudents}', ${studentIndexResult[0].StudentIndex}) AS 'Result'`, (err,result) => {
-                    if(err) throw err;
-                    connection.query(`UPDATE teacher SET classOfStudents='${result[0].Result}' WHERE teacherId=${req.session.user.mySqlId}`, (err,result) => {
-                        if(err) throw err;
-                        res.redirect('/teacher/home');
-                    })
-                })
-            })
+            res.redirect('/teacher/home');
         })
     })
 }
@@ -273,16 +252,20 @@ exports.teacherChatroom = (req,res) => {
 }
 
 exports.parentSelectStudent = (req,res) => {
-    connection.query(`SELECT * FROM parent WHERE parentId=${req.session.user.mySqlId}`, (err,result,fields) => {
-        if (err) throw err;
-        let studentIDs = result[0].savedStudents;
-        studentIDs = JSON.parse(studentIDs);
+    connection.query(`SELECT * FROM parentandstudent WHERE parentId=${req.session.user.mySqlId}`, (err,result) => {
+        if(err) throw err;
+        console.log(result);
         let idRange = "(";
-        studentIDs.forEach(studentID => {
-            idRange = `${idRange}${studentID},`
-        });
-        idRange = idRange.slice(0,-1)+')';
-        connection.query(`SELECT * FROM student WHERE studentId IN ${idRange}`, (err,studentResult,fields) => {
+        if(result.length > 0){
+            result.forEach(studentID => {
+                idRange = `${idRange}${studentID.studentId},`
+            });
+            idRange = idRange.slice(0,-1)+')';
+        }
+        else{
+            idRange += ")";
+        }
+        connection.query(`SELECT * FROM student WHERE studentId IN ${idRange};`, (err,studentResult,fields) => {
             res.render('parentSelectStudent', {
                 title: "Select Student",
                 students: studentResult,
@@ -294,23 +277,12 @@ exports.parentSelectStudent = (req,res) => {
 
 exports.parentProcessSelectStudent = (req,res) => {
     let inputtedCode = req.body.studentCode;
-    console.log("Test")
     connection.query(`SELECT * FROM student WHERE parentCode='${inputtedCode}' LIMIT 1`,(err,getStudentWithCode) => {
         if(err) throw err;
-        console.log(getStudentWithCode)
         if(getStudentWithCode.length > 0) {
-            connection.query(`SELECT * FROM parent WHERE parentId=${req.session.user.mySqlId}`,(err,getParentResult) => {
+            connection.query(`INSERT INTO parentandstudent (parentId,studentId) VALUES (${req.session.user.mySqlId}, ${getStudentWithCode[0].studentId})`, (err,result) => {
                 if(err) throw err;
-                connection.query(`SELECT CONVERT(${getStudentWithCode[0].studentId},CHAR) as 'ConvertResult'`, (err,convertResult) => {
-                    if(err) throw err;
-                    connection.query(`SELECT JSON_ARRAY_APPEND('${getParentResult[0].savedStudents}','$','${convertResult[0].ConvertResult}') AS 'Result'`,(err,result) => {
-                        if(err) throw err;
-                        connection.query(`UPDATE parent SET savedStudents='${result[0].Result}' WHERE parentId=${req.session.user.mySqlId}`,(err,updateResult) => {
-                            if(err) throw err;
-                            res.redirect('/parent/selectStudent')
-                        })
-                    })
-                })
+                res.redirect('/parent/selectStudent');
             })
         }
         else{
