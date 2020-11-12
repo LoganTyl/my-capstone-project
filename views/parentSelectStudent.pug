@@ -7,9 +7,9 @@ block content
             p No students logged currently. Add a code to get started!
         else
             each student in students
-                p #{student.firstName} #{student.lastName}
+                a(href=`/parent/home/${student.studentId}`) #{student.firstName} #{student.lastName}
     
-    form(id="studentCodeForm" method="POST" action="/" onsubmit="" class="form")
+    form(id="studentCodeForm" method="POST" action="" onsubmit="" class="form")
         label(for="studentCodeInput") Enter a student code to view another student
             input(type="text" id="studentCodeInput" name="studentCode")
         

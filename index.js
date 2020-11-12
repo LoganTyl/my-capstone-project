@@ -61,11 +61,12 @@ app.get('/teacher/chatroom', checkTeacherAuth, route.teacherChatroom);
 
 //Parent Only Pages
 app.get('/parent/selectStudent', checkParentAuth, route.parentSelectStudent);
-app.get('/parent/home', checkParentAuth, route.parentHome);
-app.get('/parent/recordLog', checkParentAuth, route.parentRecordLog);
-app.get('/parent/emailForm', checkParentAuth, route.parentEmailForm);
-app.get('/parent/chatroom', checkParentAuth, route.parentChatroom);
+app.post('/parent/selectStudent', urlencodedParser, route.parentProcessSelectStudent)
+app.get('/parent/home/:id', checkParentAuth, route.parentHome);
+app.get('/parent/recordLog/:id', checkParentAuth, route.parentRecordLog);
+app.get('/parent/emailForm/:id', checkParentAuth, route.parentEmailForm);
+app.get('/parent/chatroom/:id', checkParentAuth, route.parentChatroom);
 
 //Catch Statements
-app.get('/:excess', route.root);
+// app.get('/:excess', route.root);
 app.listen(3000);

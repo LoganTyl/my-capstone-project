@@ -93,6 +93,7 @@ exports.processSignIn = (req,res) => {
         }
         else{
             // Incorrect email
+            res.redirect('/signIn');
         }
     })
 };
@@ -101,7 +102,6 @@ exports.processSignUp = (req,res) => {
     //value is name value of selected radio button
     let whoIsSigningUp = req.body.signUpDescription;
     let queriedTable = "";
-    let queryResult;
     let fName;
     let lName;
     let email;
@@ -132,14 +132,12 @@ exports.processSignUp = (req,res) => {
                     connection.query(`INSERT INTO Teacher (firstName,lastName,email,password,classOfStudents,presetNotes) ` + 
                     `VALUES ('${fName}', '${lName}', '${email}', '${password}', '[]', '${presetNotes}')`, (err, result) => {
                         if (err) throw err;
-                        queryResult = result;
                     })
                 }
                 else{
                     connection.query(`INSERT INTO Parent (firstName,lastName,email,password,savedStudents) ` + 
                     `VALUES ('${fName}', '${lName}', '${email}', '${password}', '[]')`, (err, result) => {
                         if (err) throw err;
-                        queryResult = result;
                     })
                 }
                 res.redirect('/signIn')
@@ -262,6 +260,7 @@ exports.teacherDeleteStudent = (req,res) => {
 }
 
 exports.teacherChatMenu = (req,res) => {
+    // connection.query(`SELECT * FROM parent `)
     res.render('teacherChatMenu', {
         title: "Choose Parent to Chat With"
     })
@@ -284,7 +283,6 @@ exports.parentSelectStudent = (req,res) => {
         });
         idRange = idRange.slice(0,-1)+')';
         connection.query(`SELECT * FROM student WHERE studentId IN ${idRange}`, (err,studentResult,fields) => {
-            console.log(studentResult);
             res.render('parentSelectStudent', {
                 title: "Select Student",
                 students: studentResult,
@@ -294,9 +292,41 @@ exports.parentSelectStudent = (req,res) => {
     })
 }
 
+exports.parentProcessSelectStudent = (req,res) => {
+    let inputtedCode = req.body.studentCode;
+    console.log("Test")
+    connection.query(`SELECT * FROM student WHERE parentCode='${inputtedCode}' LIMIT 1`,(err,getStudentWithCode) => {
+        if(err) throw err;
+        console.log(getStudentWithCode)
+        if(getStudentWithCode.length > 0) {
+            connection.query(`SELECT * FROM parent WHERE parentId=${req.session.user.mySqlId}`,(err,getParentResult) => {
+                if(err) throw err;
+                connection.query(`SELECT CONVERT(${getStudentWithCode[0].studentId},CHAR) as 'ConvertResult'`, (err,convertResult) => {
+                    if(err) throw err;
+                    connection.query(`SELECT JSON_ARRAY_APPEND('${getParentResult[0].savedStudents}','$','${convertResult[0].ConvertResult}') AS 'Result'`,(err,result) => {
+                        if(err) throw err;
+                        connection.query(`UPDATE parent SET savedStudents='${result[0].Result}' WHERE parentId=${req.session.user.mySqlId}`,(err,updateResult) => {
+                            if(err) throw err;
+                            res.redirect('/parent/selectStudent')
+                        })
+                    })
+                })
+            })
+        }
+        else{
+            //Error message for student not found
+            res.redirect('back');
+        }
+    })
+}
+
 exports.parentHome = (req,res) => {
-    res.render('parentHome', {
-        title: "Student's Page"
+    let id = req.params.id;
+    connection.query(`SELECT * FROM student WHERE studentId=${id} LIMIT 1`, (err, getStudentResult) => {
+        if(err) throw err;
+        res.render('parentHome', {
+            title: `${getStudentResult[0].firstName}'s Page`
+        })
     })
 }
 
@@ -307,6 +337,8 @@ exports.parentRecordLog = (req,res) => {
 }
 
 exports.parentEmailForm = (req,res) => {
+    let id = req.params.id;
+    // connection.query(`SELECT`)
     res.render('parentEmailForm', {
         title: "Send an Email"
     })
