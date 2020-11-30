@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const expressSession = require('express-session');
 const cors = require('cors');
+const { url } = require('inspector');
 
 let app = express();
 
@@ -57,7 +58,7 @@ app.get('/teacher/editStudent/:id', checkTeacherAuth, route.teacherEditStudent);
 app.post('/teacher/editStudent/:id', urlencodedParser, route.teacherProcessEditStudent);
 app.get('/teacher/deleteStudent/:id', urlencodedParser, route.teacherDeleteStudent);
 app.get('/teacher/chatMenu', checkTeacherAuth, route.teacherChatMenu);
-app.get('/teacher/chatroom', checkTeacherAuth, route.teacherChatroom);
+app.get('/teacher/chatroom/:parentId', checkTeacherAuth, route.teacherChatroom);
 
 //Parent Only Pages
 app.get('/parent/selectStudent', checkParentAuth, route.parentSelectStudent);
@@ -65,6 +66,7 @@ app.post('/parent/selectStudent', urlencodedParser, route.parentProcessSelectStu
 app.get('/parent/home/:id', checkParentAuth, route.parentHome);
 app.get('/parent/recordLog/:id', checkParentAuth, route.parentRecordLog);
 app.get('/parent/emailForm/:id', checkParentAuth, route.parentEmailForm);
+app.post('/parent/emailForm/:id', urlencodedParser, route.parentProcessEmailForm)
 app.get('/parent/chatroom/:id', checkParentAuth, route.parentChatroom);
 
 //Catch Statements

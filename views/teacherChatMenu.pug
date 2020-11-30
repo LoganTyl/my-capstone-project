@@ -2,5 +2,9 @@ extends teacherLayout
 
 block content
     //- foreach loop going through each of the students' parents
-    <div class="chatMenuOption">
-        h3 Chat with John Smith
+    if !studentsHaveParents
+        p No students have parents registered yet. Once a parent registers, you'll see them here!
+    else
+        each parent in parents
+            <div class="chatMenuOption">
+                a(href=`/teacher/chatroom/${parent.parentId}`) Chat with #{parent.firstName} #{parent.lastName}

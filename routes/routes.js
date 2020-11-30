@@ -239,10 +239,23 @@ exports.teacherDeleteStudent = (req,res) => {
 }
 
 exports.teacherChatMenu = (req,res) => {
-    // connection.query(`SELECT * FROM parent `)
-    res.render('teacherChatMenu', {
-        title: "Choose Parent to Chat With"
-    })
+    connection.query(
+        `SELECT p.parentId, p.firstName, p.lastName FROM parent p ` + 
+        `LEFT JOIN parentandstudent ps ` + 
+        `ON p.parentId = ps.parentId ` + 
+        `LEFT JOIN student s ` + 
+        `ON ps.studentId = s.studentId ` + 
+        `LEFT JOIN teacherandstudent ts ` +
+        `ON ts.studentId = s.studentId ` + 
+        `WHERE ts.teacherId=${req.session.user.mySqlId}`, (err,result) => {
+            if(err) throw err;
+            console.log(result);
+            res.render('teacherChatMenu', {
+                title: "Choose Parent to Chat With",
+                parents: result,
+                studentsHaveParents: (result.length > 0 ? true : false)
+            })
+        })
 }
 
 exports.teacherChatroom = (req,res) => {
@@ -296,28 +309,74 @@ exports.parentHome = (req,res) => {
     let id = req.params.id;
     connection.query(`SELECT * FROM student WHERE studentId=${id} LIMIT 1`, (err, getStudentResult) => {
         if(err) throw err;
-        res.render('parentHome', {
-            title: `${getStudentResult[0].firstName}'s Page`
-        })
+        connection.query(
+            `SELECT * FROM rating r ` + 
+            `LEFT JOIN studentandrating sr ` + 
+            `ON r.ratingId = sr.ratingId ` +
+            `WHERE (sr.studentId = ${id}) AND ` +
+            `r.ratingDate = ` +
+            `(SELECT max(r1.ratingDate) ` +
+            `FROM rating r1 ` + 
+            `WHERE r1.ratingId = r.ratingId) LIMIT 5;`, (err,getRatingsResult) => {
+                if(err) throw err;
+                console.log(getRatingsResult)
+                res.render('parentHome', {
+                    title: `${getStudentResult[0].firstName}'s Page`,
+                    id: getStudentResult[0].studentId
+                })
+            })
     })
 }
 
 exports.parentRecordLog = (req,res) => {
-    res.render('parentRecordLog', {
-        title: "Student's Records"
-    })
+    let id = req.params.id;
+    connection.query(
+        `SELECT * FROM rating r ` +
+        `LEFT JOIN studentandrating sr ` + 
+        `ON r.ratingId = sr.ratingId `
+        `WHERE sr.studentId=${id}`, (err,result) => {
+            res.render('parentRecordLog', {
+                title: "Student's Records",
+                ratings: result[0],
+                areAnySavedRatings: (result[0].length > 0 ? true : false),
+                id: id
+            })
+        })
 }
 
 exports.parentEmailForm = (req,res) => {
     let id = req.params.id;
-    // connection.query(`SELECT`)
-    res.render('parentEmailForm', {
-        title: "Send an Email"
+    connection.query(`SELECT * FROM parent WHERE parentId=${req.session.user.mySqlId} LIMIT 1`, (err,result) => {
+        if(err) throw err;
+        connection.query(
+            `SELECT t.firstName, t.lastName, t.email FROM teacher t ` +
+            `LEFT JOIN teacherandstudent ts ` + 
+            `ON t.teacherId = ts.teacherId ` + 
+            `LEFT JOIN student s ` + 
+            `ON ts.studentId = s.studentId ` +
+            `LEFT JOIN parentandstudent ps ` +
+            `ON s.studentId = ps.studentId ` +
+            `WHERE ps.parentId = ${req.session.user.mySqlId} LIMIT 1`, (err,teacherResult) => {
+                console.log(result);
+                console.log(teacherResult);
+                res.render('parentEmailForm', {
+                    title: `Send an Email To ${teacherResult[0].firstName} ${teacherResult[0].lastName}`,
+                    id: id,
+                    parent: result[0],
+                    teacher: teacherResult[0]
+                })
+            })
     })
+}
+
+exports.parentProcessEmailForm = (req,res) => {
+    let id = req.params.id;
+    res.redirect(`/parent/home/${id}`);
 }
 
 exports.parentChatroom = (req,res) => {
     res.render('parentChatroom', {
-        title: "Chatroom"
+        title: "Chatroom",
+        id: id
     })
 }

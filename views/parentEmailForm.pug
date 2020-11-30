@@ -1,12 +1,13 @@
 extends parentLayout
 
 block content
-    form(id="sendEmail" method="POST" action="/" onsubmit="" class="form")
+    form(id="sendEmail" method="POST" action="" onsubmit="sendEmail();" class="form")
         label(for="emailFormName") Your Name
-            input(type="text" id="emailFormName" name="emailName" value="")
+            input(type="text" id="emailFormName" name="emailName" value=`${parent.firstName} ${parent.lastName}`)
         label(for="emailFormEmail") Your Email
-            input(type="text" id="emailFormEmail" name="emailEmail" value="")
+            input(type="text" id="emailFormEmail" name="emailEmail" value=parent.email)
         label(for="emailFormSubject") Email Subject
             input(type="text" id="emailFormSubject" name="emailSubject")
         input(type="text" id="emailFormBody" name="emailBody")
-        input(type="submit" class="btn" value="Send")
+        input(type="hidden" id="emailFormTeacherEmail" value=teacher.email)
+        input(type="submit" class="btn" id="emailBtn" value="Send")

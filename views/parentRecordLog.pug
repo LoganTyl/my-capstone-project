@@ -1,5 +1,11 @@
 extends parentLayout
 
 block content
-    //- Iterate through parent's student's notes in database
-    div(class="studentNotes")
+    if !areAnySavedRatings
+        p No records saved for this student yet. Come back later
+    else
+        each record in ratings
+            div(class="studentNotes")
+                p #{record.ratingDate}
+                p #{record.numberRating}
+                p #{record.note}
