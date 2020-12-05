@@ -33,7 +33,7 @@ const processingEmail = () => {
 
 const sendEmail = () => {
     Email.send({
-        Host : "smtp.gmail.com", //now deleted
+        Host : "smtp.gmail.com",
         Username : "echos.noreply@gmail.com", //sender email
         Password : "FphFZ$my26!nWSU9", //sender password
         To : `${teacherEmail.value}`,
@@ -44,3 +44,49 @@ const sendEmail = () => {
         processingEmail()
     );
 }
+
+//Graph Set Up
+let ctx = document.getElementById('myGraph').getContext('2d');
+let ratingInputs = document.getElementsByClassName('ratingInput');
+let finalDateArray = [];
+let finalNumberArray = [];
+for(rating of ratingInputs){
+        if(rating.value == 'N/A'){
+            finalNumberArray.push('0');
+            finalDateArray.push('N/A')
+        }
+        else{
+            let ratingArray = rating.value.split(';');
+            finalNumberArray.push(ratingArray[0]); //Number Rating
+            finalDateArray.push(ratingArray[1]); //Date
+        }
+        // 0: 01, 1: 23, 2: 45, 3: 67, 4: 89
+}
+
+let lineGraph = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: finalDateArray,
+        datasets: [
+            {
+                label: "Student Rating",
+                data: finalNumberArray,
+                pointBackgroundColor: '#f004'
+            }
+        ]
+    },
+    options: {
+        title: {
+            display: true,
+            text: 'Behavior of Student in Last 5 School Days'
+        },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    suggestedMin: 0,
+                    suggestedMax: 10
+                }
+            }]
+        }
+    }
+})

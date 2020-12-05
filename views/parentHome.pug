@@ -2,3 +2,6 @@ extends parentLayout
 
 block content
     div(id="studentGraph")
+        canvas(id="myGraph")
+    each record in ratings
+        input(type="hidden" class="ratingInput" value=`${record}`)

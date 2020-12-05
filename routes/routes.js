@@ -208,11 +208,16 @@ exports.teacherProcessAddStudent = (req,res) => {
 
 exports.teacherEditStudent = (req,res) => {
     let id = req.params.id;
-    connection.query(`SELECT * FROM student WHERE studentId=${id}`, (err,result) => {
+    connection.query(`SELECT * FROM student WHERE studentId=${id}`, (err,studentResult) => {
         if(err) throw err;
-        res.render('teacherEditStudent', {
-            title: "Edit Student",
-            student: result[0]
+        connection.query(`SELECT * FROM teacher WHERE teacherId=${req.session.user.mySqlId}`, (err,teacherResult) => {
+            if(err) throw err;
+            let presetNotes = JSON.parse(teacherResult[0].presetNotes);
+            res.render('teacherEditStudent', {
+                title: "Edit Student",
+                student: studentResult[0],
+                notes: presetNotes
+            })
         })
     })
 }
@@ -221,6 +226,9 @@ exports.teacherProcessEditStudent = (req,res) => {
     let id = req.params.id;
     let newFName = req.body.fName;
     let newLName = req.body.lName;
+    let newNumber = req.body.rating;
+    let newNote = req.body.note;
+    let extraNotes = req.body.extraNotes;
     connection.query(`UPDATE student SET firstName='${newFName}', lastName='${newLName}' WHERE studentId=${id}`, (err,result) => {
         if(err) throw err;
         res.redirect('/teacher/home')
@@ -307,6 +315,7 @@ exports.parentProcessSelectStudent = (req,res) => {
 
 exports.parentHome = (req,res) => {
     let id = req.params.id;
+    let ratingAndDateArray = [];
     connection.query(`SELECT * FROM student WHERE studentId=${id} LIMIT 1`, (err, getStudentResult) => {
         if(err) throw err;
         connection.query(
@@ -319,10 +328,25 @@ exports.parentHome = (req,res) => {
             `FROM rating r1 ` + 
             `WHERE r1.ratingId = r.ratingId) LIMIT 5;`, (err,getRatingsResult) => {
                 if(err) throw err;
-                console.log(getRatingsResult)
+                if(getRatingsResult.length < 5){
+                    let fillerAmt = 5 - getRatingsResult.length;
+                    for(let i = 0; i < fillerAmt; i++){
+                        ratingAndDateArray.push('N/A');
+                    }
+                }
+                getRatingsResult.forEach(ratingAndDateResult => {
+                    let dbRating = ratingAndDateResult.numberRating;
+                    let jsDate = new Date(ratingAndDateResult.ratingDate);
+                    let month = String(jsDate.getMonth() + 1);
+                    let day = String(jsDate.getDate());
+                    let inputValue = `${dbRating};${month}/${day}`;
+                    ratingAndDateArray.push(inputValue);
+                });
+                console.log(ratingAndDateArray);
                 res.render('parentHome', {
                     title: `${getStudentResult[0].firstName}'s Page`,
-                    id: getStudentResult[0].studentId
+                    id: getStudentResult[0].studentId,
+                    ratings: ratingAndDateArray
                 })
             })
     })
@@ -337,8 +361,8 @@ exports.parentRecordLog = (req,res) => {
         `WHERE sr.studentId=${id}`, (err,result) => {
             res.render('parentRecordLog', {
                 title: "Student's Records",
-                ratings: result[0],
-                areAnySavedRatings: (result[0].length > 0 ? true : false),
+                ratings: result,
+                areAnySavedRatings: (result.length > 0 ? true : false),
                 id: id
             })
         })

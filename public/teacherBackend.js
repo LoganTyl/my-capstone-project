@@ -1,3 +1,4 @@
+//Side Nav Icon and Controls
 const burgerIcon = document.getElementsByClassName("burgerIcon");
 const closeBtn = document.getElementsByClassName("closeBtn");
 const sideNav = document.getElementById("teacherSideNav");
@@ -17,3 +18,16 @@ const closeNav = () => {
 
 burgerIcon[0].addEventListener("click", openNav);
 closeBtn[0].addEventListener("click", closeNav);
+
+//Edit Student Controls
+const extraNotesInput = document.getElementById('extraNotes');
+const noteSelect = document.getElementById('editStudentNote');
+
+const checkColors = val => {
+    if(val=='other'){
+        extraNotesInput.style.display='block';
+    }
+    else{
+        extraNotesInput.style.display='none';
+    }
+}
