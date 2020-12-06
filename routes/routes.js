@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt-nodejs');
+const e = require('express');
 
 const mysql = require('mysql');
 const connection = mysql.createConnection({
@@ -196,6 +197,14 @@ exports.teacherProcessAddStudent = (req,res) => {
     let firstName = req.body.fName;
     let lastName = req.body.lName;
     let parentCode = makeID(10);
+    let uniqueCode = false;
+    while(!uniqueCode){
+        connection.query(`SELECT * FROM student WHERE parentCode='${parentCode}'`, (err,result) => {
+            if(result.length == 0){ //Unique code
+                uniqueCode = true;
+            }
+        })
+    }
     connection.query(`INSERT INTO student (firstName,lastName,parentCode) ` + 
     `VALUES ('${firstName}', '${lastName}', '${parentCode}')`, (err,studentInsertResult) => {
         if(err) throw err;
@@ -204,7 +213,6 @@ exports.teacherProcessAddStudent = (req,res) => {
             res.redirect('/teacher/home');
         })
     })
-
 }
 
 exports.teacherEditStudent = (req,res) => {
@@ -236,16 +244,19 @@ exports.teacherProcessEditStudent = (req,res) => {
     connection.query(`UPDATE student SET firstName='${newFName}', lastName='${newLName}' WHERE studentId=${id}`, (err,result) => {
         if(err) throw err;
         connection.query(
-            `SELECT * FROM rating r` + 
+            `SELECT * FROM rating r ` + 
             `LEFT JOIN studentandrating sr ` +
             `ON r.ratingId = sr.ratingId ` +
             `WHERE (sr.studentId = ${id}) ` + 
-            `AND (r.ratingDate = ${dateNow})`, (err,ratingResult) => {
+            `AND (r.ratingDate = '${dateNow}')`, (err,ratingResult) => {
                 if(err) throw err;
                 if(ratingResult.length == 0){ // Rating for that date does not exist
                     connection.query(`INSERT INTO rating (numberRating,note,ratingDate) ` +
                     `VALUES (${newNumber},'${(useExtraNotes ? extraNotes : newNote)}','${dateNow}')`, (err,result) => {
                         if(err) throw err;
+                        connection.query(`INSERT INTO studentandrating (studentId,ratingId) VALUES (${id},LAST_INSERT_ID())`,(err,result) => {
+                            if(err) throw err;
+                        })
                     })
                 }
                 else{ // Rating for that date does exist
