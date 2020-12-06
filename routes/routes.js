@@ -174,6 +174,7 @@ exports.teacherHome = (req,res) => {
         });
         idRange = idRange.slice(0,-1)+')';
         connection.query(`SELECT * FROM student WHERE studentId IN ${idRange}`, (err,classResult,fields) => {
+            if(err) throw err;
             // Might need to query for each student's ratings on that day
             res.render('teacherHome', {
                 title: `${req.session.user.firstName}'s Home`,
@@ -229,9 +230,31 @@ exports.teacherProcessEditStudent = (req,res) => {
     let newNumber = req.body.rating;
     let newNote = req.body.note;
     let extraNotes = req.body.extraNotes;
+    let dateNow = new Date();
+    dateNow = dateNow.toISOString().split('T')[0];
+    let useExtraNotes = (newNote == 'other') ? true : false;
     connection.query(`UPDATE student SET firstName='${newFName}', lastName='${newLName}' WHERE studentId=${id}`, (err,result) => {
         if(err) throw err;
-        res.redirect('/teacher/home')
+        connection.query(
+            `SELECT * FROM rating r` + 
+            `LEFT JOIN studentandrating sr ` +
+            `ON r.ratingId = sr.ratingId ` +
+            `WHERE (sr.studentId = ${id}) ` + 
+            `AND (r.ratingDate = ${dateNow})`, (err,ratingResult) => {
+                if(err) throw err;
+                if(ratingResult.length == 0){ // Rating for that date does not exist
+                    connection.query(`INSERT INTO rating (numberRating,note,ratingDate) ` +
+                    `VALUES (${newNumber},'${(useExtraNotes ? extraNotes : newNote)}','${dateNow}')`, (err,result) => {
+                        if(err) throw err;
+                    })
+                }
+                else{ // Rating for that date does exist
+                    connection.query(`UPDATE rating SET numberRating=${newNumber}, note='${(useExtraNotes ? extraNotes : newNote)}', '${dateNow}' WHERE ratingId=${ratingResult[0].ratingId}`, (err, updateResult) => {
+                        if(err) throw err;
+                    })
+                }
+                res.redirect('/teacher/home')
+            })
     })
 }
 
@@ -357,7 +380,7 @@ exports.parentRecordLog = (req,res) => {
     connection.query(
         `SELECT * FROM rating r ` +
         `LEFT JOIN studentandrating sr ` + 
-        `ON r.ratingId = sr.ratingId `
+        `ON r.ratingId = sr.ratingId ` +
         `WHERE sr.studentId=${id}`, (err,result) => {
             res.render('parentRecordLog', {
                 title: "Student's Records",
