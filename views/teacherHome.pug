@@ -1,18 +1,22 @@
-extends layout
+extends teacherLayout
 
 block content
-    //- Replace fake date with real one
     h3 Today's Date: #{date}
-    table
-        tr
-            th Name
-            th Parent Code
-            th Rating
-            th Notes
-        //- Replace tr with foreach loop going through teacher's class
-        tr
-            td Test1
-            td 1111111
-            td 10
-            td Doing well
+    if isEmptyClass
+        p You don't have any students in your class. Add some students to get started.
+    else
+        table
+            tr
+                th Name
+                th Parent Code
+                th Rating
+                th Notes
+            each student in myClass
+                tr
+                    td #{student.firstName} #{student.lastName}
+                    td #{student.parentCode}
+                    td 10
+                    td Doing well
+                    td
+                        a(href="/teacher/editStudent/" + student.studentId) Edit
     

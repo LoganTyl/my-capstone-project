@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const expressSession = require('express-session');
 const cors = require('cors');
+const { url } = require('inspector');
 
 let app = express();
 
@@ -22,6 +23,22 @@ app.use(expressSession({
     resave: true
 }));
 
+const checkTeacherAuth = (req,res,next) => {
+    if(req.session.user && req.session.user.isAuthenticated && req.session.user.isTeacher) {
+        next();
+    } else {
+        res.redirect('/');
+    }
+};
+
+const checkParentAuth = (req,res,next) => {
+    if(req.session.user && req.session.user.isAuthenticated && !req.session.user.isTeacher) {
+        next();
+    } else {
+        res.redirect('/');
+    }
+};
+
 let urlencodedParser = bodyParser.urlencoded({
     extended: false
 });
@@ -31,21 +48,27 @@ app.get('/signIn', route.signIn);
 app.post('/signIn', urlencodedParser, route.processSignIn);
 app.get('/signUp', route.signUp);
 app.post('/signUp', urlencodedParser, route.processSignUp);
+app.get('/logout', route.logout)
 
 //Teacher Only Pages
-app.get('/teacher/home', route.teacherHome);
-app.get('/teacher/addStudent', route.teacherAddStudent);
-// app.post('/teacher/addStudent', urlencodedParser, route.teacherProcessAddStudent);
-app.get('/teacher/editStudent', route.teacherEditStudent);
-// app.put('/teacher/editStudent', urlencodedParser, route.teacherProcessEditStudent);
-// app.delete('/teacher/editStudent', urlencodedParser, route.teacherDeleteStudent);
-app.get('/teacher/chatMenu', route.teacherChatMenu);
-app.get('/teacher/chatroom', route.teacherChatroom);
+app.get('/teacher/home', checkTeacherAuth, route.teacherHome);
+app.get('/teacher/addStudent', checkTeacherAuth, route.teacherAddStudent);
+app.post('/teacher/addStudent', urlencodedParser, route.teacherProcessAddStudent);
+app.get('/teacher/editStudent/:id', checkTeacherAuth, route.teacherEditStudent);
+app.post('/teacher/editStudent/:id', urlencodedParser, route.teacherProcessEditStudent);
+app.get('/teacher/deleteStudent/:id', urlencodedParser, route.teacherDeleteStudent);
+app.get('/teacher/chatMenu', checkTeacherAuth, route.teacherChatMenu);
+app.get('/teacher/chatroom/:parentId', checkTeacherAuth, route.teacherChatroom);
 
 //Parent Only Pages
-app.get('/parent/selectStudent', route.parentSelectStudent);
-app.get('/parent/home', route.parentHome);
-app.get('/parent/recordLog', route.parentRecordLog);
-app.get('/parent/emailForm', route.parentEmailForm);
-app.get('/parent/chatroom', route.parentChatroom);
+app.get('/parent/selectStudent', checkParentAuth, route.parentSelectStudent);
+app.post('/parent/selectStudent', urlencodedParser, route.parentProcessSelectStudent)
+app.get('/parent/home/:id', checkParentAuth, route.parentHome);
+app.get('/parent/recordLog/:id', checkParentAuth, route.parentRecordLog);
+app.get('/parent/emailForm/:id', checkParentAuth, route.parentEmailForm);
+app.post('/parent/emailForm/:id', urlencodedParser, route.parentProcessEmailForm)
+app.get('/parent/chatroom/:id', checkParentAuth, route.parentChatroom);
+
+//Catch Statements
+// app.get('/:excess', route.root);
 app.listen(3000);

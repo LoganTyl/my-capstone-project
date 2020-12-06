@@ -1,0 +1,21 @@
+doctype html
+html
+    head
+        link(href='/style.css' rel="stylesheet")
+    body
+        div(id="parentSideNav" class="sideNav")
+            a(href="javascript:void(0)" class="closeBtn") &times;
+            a(href=`/parent/home/${id}`) Home
+            a(href=`/parent/recordLog/${id}`) Record Log
+            a(href=`/parent/emailForm/${id}`) Send an Email
+            a(href=`/parent/chatroom/${id}`) Chat with your Teacher
+            a(href="/logout") Log Out
+
+        div(id="parentMain")
+            span(class="burgerIcon") &#9776;
+            title #{title}
+            h1 #{title}
+            block content
+            script(src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js")
+            script(src="https://smtpjs.com/v3/smtp.js")
+            script(src="/parentBackend.js")

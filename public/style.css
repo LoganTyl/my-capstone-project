@@ -1,0 +1,28 @@
+.sideNav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    overflow-x: hidden;
+    transition: 0.3s;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #ccc;
+}
+
+.sideNav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    display: block;
+    transition: 0.3s;
+}
+
+.burgerIcon, .closeBtn {
+    cursor: pointer;
+    font-size: 30px;
+}
+
+#teacherMain, #parentMain {
+    transition: margin-left .3s;
+}
