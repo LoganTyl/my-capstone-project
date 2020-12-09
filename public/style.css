@@ -200,6 +200,12 @@ h1{
     background-color: #ccc;
     cursor: pointer;
 }
+
+#extraNotes {
+    margin: 0 auto;
+    margin-top: 10px;
+
+}
 /* #endregion */
 
 /* #region Teacher Chat Menu */
@@ -237,6 +243,7 @@ h1{
     background-color: #ccc;
     cursor: pointer;
     margin-top: 5px;
+    margin-bottom: 10px;
 }
 
 #studentCodeForm {
@@ -250,7 +257,7 @@ h1{
     padding: 20px;
     background-color: #B2CAD6;
     text-align: center;
-    margin: 0 35%;
+    margin: 10px 35%;
     border-radius: 10px;
     border: 1px solid black;
 }

@@ -16,10 +16,10 @@ const passwordWarning = document.getElementById("passwordWarning");
 const passwordConfirmWarning = document.getElementById("passwordConfirmWarning");
 const emailWarning = document.getElementById("emailWarning");
 
-const passwordPattern = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$");
+const passwordPattern = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$");
 // Min 8 characters, one uppercase letter, one lowercase letter, one special character
 
-const emailPattern = new RegExp("^\S+@\S+\.\S+$");
+const emailPattern = new RegExp("^\\S+@\\S+\\.\\S+$");
 // Must have @ and .
 
 let canSignUp = false;
@@ -61,6 +61,8 @@ const validateEmail = () => {
 const validatePassword = () => {
     let passInput = passwordSignUp.value;
     let result = passwordPattern.test(passInput);
+    console.log(passInput)
+    console.log(result)
     if(result){
         passwordWarning.style.display = "none";
         canSignUp = true;

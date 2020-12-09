@@ -171,18 +171,22 @@ exports.teacherHome = (req,res) => {
     connection.query(`SELECT * FROM teacherandstudent WHERE teacherId=${req.session.user.mySqlId}`, (err,result) => {
         if(err) throw err;
         let idRange = "(";
-        result.forEach(studentID => {
-            idRange = `${idRange}${studentID.studentId},`
-        });
-        idRange = idRange.slice(0,-1)+')';
+        if(result.length > 0){
+            result.forEach(studentID => {
+                idRange = `${idRange}${studentID.studentId},`
+            });
+            idRange = idRange.slice(0,-1)+')';
+        }
+        else{
+            idRange += "-100)"
+        }
         connection.query(
             `SELECT s.*, r.* FROM student s 
             LEFT JOIN studentandrating sr 
             ON s.studentId = sr.studentId 
             LEFT JOIN rating r 
             ON r.ratingId = sr.ratingId 
-            WHERE (s.studentId IN ${idRange}) AND 
-            (r.ratingDate = ${sqlDate})`, (err,classResult) => {
+            WHERE (s.studentId IN ${idRange})`, (err,classResult) => {
             if(err) throw err;
             res.render('teacherHome', {
                 title: `${req.session.user.firstName}'s Home`,
@@ -204,14 +208,14 @@ exports.teacherProcessAddStudent = (req,res) => {
     let firstName = req.body.fName;
     let lastName = req.body.lName;
     let parentCode = makeID(10);
-    let uniqueCode = false;
-    while(!uniqueCode){
-        connection.query(`SELECT * FROM student WHERE parentCode='${parentCode}'`, (err,result) => {
-            if(result.length == 0){ //Unique code
-                uniqueCode = true;
-            }
-        })
-    }
+    // let uniqueCode = false;
+    // while(!uniqueCode){
+    //     connection.query(`SELECT * FROM student WHERE parentCode='${parentCode}'`, (err,result) => {
+    //         if(result.length == 0){ //Unique code
+    //             uniqueCode = true;
+    //         }
+    //     })
+    // }
     connection.query(`INSERT INTO student (firstName,lastName,parentCode) ` + 
     `VALUES ('${firstName}', '${lastName}', '${parentCode}')`, (err,studentInsertResult) => {
         if(err) throw err;
@@ -267,7 +271,7 @@ exports.teacherProcessEditStudent = (req,res) => {
                     })
                 }
                 else{ // Rating for that date does exist
-                    connection.query(`UPDATE rating SET numberRating=${newNumber}, note='${(useExtraNotes ? extraNotes : newNote)}', '${dateNow}' WHERE ratingId=${ratingResult[0].ratingId}`, (err, updateResult) => {
+                    connection.query(`UPDATE rating SET numberRating=${newNumber}, note='${(useExtraNotes ? extraNotes : newNote)}', ratingDate='${dateNow}' WHERE ratingId=${ratingResult[0].ratingId}`, (err, updateResult) => {
                         if(err) throw err;
                     })
                 }
@@ -399,7 +403,11 @@ exports.parentRecordLog = (req,res) => {
         `SELECT * FROM rating r ` +
         `LEFT JOIN studentandrating sr ` + 
         `ON r.ratingId = sr.ratingId ` +
-        `WHERE sr.studentId=${id}`, (err,result) => {
+        `WHERE (sr.studentId=${id}) AND ` +
+        `r.ratingDate = ` + 
+        `(SELECT max(r1.ratingDate) ` +
+        `FROM rating r1 ` + 
+        `WHERE r1.ratingId = r.ratingId)`, (err,result) => {
             res.render('parentRecordLog', {
                 title: "Student's Records",
                 ratings: result,

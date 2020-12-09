@@ -7,8 +7,10 @@ block content
         else
             each student in students
                 a(href=`/parent/home/${student.studentId}`) #{student.firstName} #{student.lastName}
+                br
         form(id="studentCodeForm" method="POST" action="" onsubmit="" class="form")
             label(for="studentCodeInput") Enter a student code to view another student
                 input(type="text" id="studentCodeInput" name="studentCode")
                 br
             input(type='submit' class='btn' value='Search' id="enterStudentBtn")
+        a(href="/signIn" id="returnToSignIn") Sign In Instead
