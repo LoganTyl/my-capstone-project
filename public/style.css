@@ -233,3 +233,40 @@ html {
 }
 
 /* #endregion */
+
+/* #region Parent Record Log */
+.studentNotes {
+    padding: 20px;
+    background-color: #B2CAD6;
+    text-align: center;
+    margin: 0 35%;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+/* #endregion */
+
+/* #region Parent Email Form */
+#parentEmailForm {
+    padding: 20px;
+    background-color: #B2CAD6;
+    text-align: center;
+    margin: 0 35%;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+#emailFormBody {
+    height: 200px;
+    width: 300px;
+    max-width: 425px;
+}
+
+#emailBtn{
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: medium;
+    background-color: #ccc;
+    cursor: pointer;
+}
+/* #endregion */
