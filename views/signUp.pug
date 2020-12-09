@@ -1,31 +1,35 @@
 extends layout
 
 block content
-    form(method="POST" action="" onsubmit="return checkSignUp()")
-        p
-            strong First Name: <br/>
-                input(type="text" id="signUpFName" name="fName")
-        p        
-            strong Last Name: <br/>
-                input(type="text" id="signUpLName" name="lName")
-        p        
-            strong Password: <br/>
-                input(type="text" id="signUpPassword" name="password")
-        p        
-            strong Confirm Password: <br/>
-                input(type="text" id="signUpPasswordConfirm" name="passwordConfirm")
-        p        
-            strong Email: <br/>
-                input(type="text" id="signUpEmail" name="email")
-        p
-            strong I am a: <br/>
-            
-            <input type="radio" name="signUpDescription" value="teacher" id="signUpAsTeacher">
-            <label for="teacher"> Teacher <br/>
+    div(id="signUpDiv")
+        form(method="POST" action="" onsubmit="return checkSignUp()")
+            p(id="fNameSignUp")
+                strong First Name: <br/>
+                    input(type="text" id="signUpFName" name="fName")
+            p(id="lNameSignUp")    
+                strong Last Name: <br/>
+                    input(type="text" id="signUpLName" name="lName")
+            p(id="passwordSignUp")      
+                strong Password: <br/>
+                    input(type="text" id="signUpPassword" name="password")
+            p(id="passwordWarning" class="warning" style="display:none") Passwords must be at least 8 characters and have at least one uppercase, lowercase, and special character!
+            p(id="confirmPassSignUp")    
+                strong Confirm Password: <br/>
+                    input(type="text" id="signUpPasswordConfirm" name="passwordConfirm")
+            p(id="passwordConfirmWarning" class="warning" style="display:none") Passwords must match!
+            p(id="emailSignUp")    
+                strong Email: <br/>
+                    input(type="text" id="signUpEmail" name="email")
+            p(id="emailWarning" class="warning" style="display:none") Email addresses must be valid!
+            p(id="jobSelectSignUp")
+                strong I am a: <br/>
+                
+                <input type="radio" name="signUpDescription" value="teacher" id="signUpAsTeacher">
+                <label for="teacher"> Teacher <br/>
 
-            <input type="radio" name="signUpDescription" value="parent" id="signUpAsParent">
-            <label for="parent"> Parent <br/>
-        p
-            input(type="submit" value="Sign Up")
-    
-    a(href="/signIn") Sign In Instead
+                <input type="radio" name="signUpDescription" value="parent" id="signUpAsParent">
+                <label for="parent"> Parent <br/>
+            p(id="submitSignUp")
+                input(type="submit" value="Sign Up" id="signUpBtn")
+        
+        a(href="/signIn" id="returnToSignIn") Sign In Instead

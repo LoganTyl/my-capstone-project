@@ -1,3 +1,15 @@
+/* #region Site Wide Controls */
+html {
+    background-color: #C6E2F0;
+    font-family: 'Nanum Myeongjo', serif;
+}
+
+h1{
+    text-align: center;
+}
+/* #endregion */
+
+/* #region Side Nav and Buttons */
 .sideNav {
     height: 100%;
     width: 0;
@@ -20,9 +32,259 @@
 
 .burgerIcon, .closeBtn {
     cursor: pointer;
-    font-size: 30px;
+    font-size: 50px;
 }
 
 #teacherMain, #parentMain {
     transition: margin-left .3s;
 }
+
+.topBar {
+    display: flex;
+    flex-direction: row;
+}
+
+.topBar h1 {
+    margin-left: 10px;
+}
+/* #endregion */
+
+/* #region Sign In */
+#signInDiv {
+    padding: 20px;
+    background-color: #B2CAD6;
+    text-align: center;
+    margin: 0 35%;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+#emailSignIn, #passwordSignIn, #jobSignIn, #submitSignIn, #newAccountSignIn {
+    padding: 15px 0;
+}
+
+#emailSignIn, #passwordSignIn {
+    font-size: larger;
+}
+
+#signInAsTeacher, #signInAsParent {
+    cursor: pointer;
+}
+
+#signInBtn {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: medium;
+    background-color: #ccc;
+    cursor: pointer;
+}
+
+#newAccountSignIn {
+    text-decoration: none;
+    font-weight: bold;
+}
+/* #endregion */
+
+/* #region Sign Up */
+#signUpDiv {
+    padding: 20px;
+    background-color: #B2CAD6;
+    text-align: center;
+    margin: 0 35%;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+#fNameSignUp, #lNameSignUp, #passwordSignUp, #confirmPassSignUp, #emailSignUp, #jobSelectSignUp, #submitSignUp {
+    padding: 10px 0;
+}
+
+#fNameSignUp, #lNameSignUp, #passwordSignUp, #confirmPassSignUp, #emailSignUp {
+    font-size: larger;
+}
+
+#signUpAsTeacher, #signUpAsParent {
+    cursor: pointer;
+}
+
+#signUpBtn {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: medium;
+    background-color: #ccc;
+    cursor: pointer;
+}
+
+#returnToSignIn {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.warning {
+    color: crimson;
+    font-weight: bold;
+}
+/* #endregion */
+
+/* #region Teacher Home */
+#teacherHome{
+    padding: 20px;
+    background-color: #B2CAD6;
+    text-align: center;
+    margin: 0 35%;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+#teacherHomeTable {
+    margin: 0px auto;
+}
+
+#teacherHomeTable th{
+    font-weight: 900;
+    padding: 10px 5px;
+}
+
+#teacherHomeTable td{
+    margin: 0;
+    padding: 4px;
+    text-align: center;
+}
+
+.editCell {
+    display: inline-block;
+}
+
+.editIcon {
+    margin-left: 20px;
+}
+/* #endregion */
+
+/* #region Teacher Add Student */
+#teacherAdd {
+    padding: 20px;
+    background-color: #B2CAD6;
+    text-align: center;
+    margin: 0 35%;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+#addStudentBtn {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: medium;
+    background-color: #ccc;
+    cursor: pointer;
+}
+/* #endregion */
+
+/* #region Teacher Edit Student */
+#teacherEdit {
+    padding: 20px;
+    background-color: #B2CAD6;
+    text-align: center;
+    margin: 0 35%;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+#editStudentBtn {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: medium;
+    background-color: #ccc;
+    cursor: pointer;
+}
+
+#extraNotes {
+    margin: 0 auto;
+    margin-top: 10px;
+
+}
+/* #endregion */
+
+/* #region Teacher Chat Menu */
+.chatMenuOption {
+    padding: 20px;
+    background-color: #B2CAD6;
+    text-align: center;
+    margin: 0 35%;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+.chatMenuOption a {
+    text-decoration: none;
+    font-weight: bold;
+    font-size: larger;
+}
+/* #endregion */
+
+/* #region Parent Select Student */
+.studentSelection {
+    padding: 20px;
+    background-color: #B2CAD6;
+    text-align: center;
+    margin: 0 35%;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+#enterStudentBtn {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: medium;
+    background-color: #ccc;
+    cursor: pointer;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+#studentCodeForm {
+    margin-top: 10px;
+}
+
+/* #endregion */
+
+/* #region Parent Record Log */
+.studentNotes {
+    padding: 20px;
+    background-color: #B2CAD6;
+    text-align: center;
+    margin: 10px 35%;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+/* #endregion */
+
+/* #region Parent Email Form */
+#parentEmailForm {
+    padding: 20px;
+    background-color: #B2CAD6;
+    text-align: center;
+    margin: 0 35%;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+#emailFormBody {
+    height: 200px;
+    width: 300px;
+    max-width: 425px;
+}
+
+#emailBtn{
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: medium;
+    background-color: #ccc;
+    cursor: pointer;
+}
+/* #endregion */

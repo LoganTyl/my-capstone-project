@@ -32,7 +32,7 @@ exports.root = (req,res) => {
 // Get page for signing in
 exports.signIn = (req,res) => {
     res.render('signIn', {
-        title: "Sign In"
+        title: "ECHOS Sign In"
     })
 };
 
@@ -166,17 +166,28 @@ exports.teacherHome = (req,res) => {
     let month = months[currentDate.getMonth()];
     let day = String(currentDate.getDate()).padStart(2,'0');
     let year = currentDate.getFullYear();
+    let sqlDate = currentDate.toISOString().split('T')[0]
 
     connection.query(`SELECT * FROM teacherandstudent WHERE teacherId=${req.session.user.mySqlId}`, (err,result) => {
         if(err) throw err;
         let idRange = "(";
-        result.forEach(studentID => {
-            idRange = `${idRange}${studentID.studentId},`
-        });
-        idRange = idRange.slice(0,-1)+')';
-        connection.query(`SELECT * FROM student WHERE studentId IN ${idRange}`, (err,classResult,fields) => {
+        if(result.length > 0){
+            result.forEach(studentID => {
+                idRange = `${idRange}${studentID.studentId},`
+            });
+            idRange = idRange.slice(0,-1)+')';
+        }
+        else{
+            idRange += "-100)"
+        }
+        connection.query(
+            `SELECT s.*, r.* FROM student s 
+            LEFT JOIN studentandrating sr 
+            ON s.studentId = sr.studentId 
+            LEFT JOIN rating r 
+            ON r.ratingId = sr.ratingId 
+            WHERE (s.studentId IN ${idRange})`, (err,classResult) => {
             if(err) throw err;
-            // Might need to query for each student's ratings on that day
             res.render('teacherHome', {
                 title: `${req.session.user.firstName}'s Home`,
                 date: `${month} ${day}, ${year}`,
@@ -197,14 +208,14 @@ exports.teacherProcessAddStudent = (req,res) => {
     let firstName = req.body.fName;
     let lastName = req.body.lName;
     let parentCode = makeID(10);
-    let uniqueCode = false;
-    while(!uniqueCode){
-        connection.query(`SELECT * FROM student WHERE parentCode='${parentCode}'`, (err,result) => {
-            if(result.length == 0){ //Unique code
-                uniqueCode = true;
-            }
-        })
-    }
+    // let uniqueCode = false;
+    // while(!uniqueCode){
+    //     connection.query(`SELECT * FROM student WHERE parentCode='${parentCode}'`, (err,result) => {
+    //         if(result.length == 0){ //Unique code
+    //             uniqueCode = true;
+    //         }
+    //     })
+    // }
     connection.query(`INSERT INTO student (firstName,lastName,parentCode) ` + 
     `VALUES ('${firstName}', '${lastName}', '${parentCode}')`, (err,studentInsertResult) => {
         if(err) throw err;
@@ -260,7 +271,7 @@ exports.teacherProcessEditStudent = (req,res) => {
                     })
                 }
                 else{ // Rating for that date does exist
-                    connection.query(`UPDATE rating SET numberRating=${newNumber}, note='${(useExtraNotes ? extraNotes : newNote)}', '${dateNow}' WHERE ratingId=${ratingResult[0].ratingId}`, (err, updateResult) => {
+                    connection.query(`UPDATE rating SET numberRating=${newNumber}, note='${(useExtraNotes ? extraNotes : newNote)}', ratingDate='${dateNow}' WHERE ratingId=${ratingResult[0].ratingId}`, (err, updateResult) => {
                         if(err) throw err;
                     })
                 }
@@ -392,7 +403,11 @@ exports.parentRecordLog = (req,res) => {
         `SELECT * FROM rating r ` +
         `LEFT JOIN studentandrating sr ` + 
         `ON r.ratingId = sr.ratingId ` +
-        `WHERE sr.studentId=${id}`, (err,result) => {
+        `WHERE (sr.studentId=${id}) AND ` +
+        `r.ratingDate = ` + 
+        `(SELECT max(r1.ratingDate) ` +
+        `FROM rating r1 ` + 
+        `WHERE r1.ratingId = r.ratingId)`, (err,result) => {
             res.render('parentRecordLog', {
                 title: "Student's Records",
                 ratings: result,
@@ -433,6 +448,7 @@ exports.parentProcessEmailForm = (req,res) => {
 }
 
 exports.parentChatroom = (req,res) => {
+    let id = req.params.id;
     res.render('parentChatroom', {
         title: "Chatroom",
         id: id

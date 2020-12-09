@@ -1,22 +1,27 @@
 extends teacherLayout
 
 block content
-    h3 Today's Date: #{date}
-    if isEmptyClass
-        p You don't have any students in your class. Add some students to get started.
-    else
-        table
-            tr
-                th Name
-                th Parent Code
-                th Rating
-                th Notes
-            each student in myClass
+    div(id="teacherHome")
+        h3 Today's Date: #{date}
+        if isEmptyClass
+            p You don't have any students in your class. Add some students to get started.
+        else
+            table(id='teacherHomeTable')
                 tr
-                    td #{student.firstName} #{student.lastName}
-                    td #{student.parentCode}
-                    td 10
-                    td Doing well
-                    td
-                        a(href="/teacher/editStudent/" + student.studentId) Edit
+                    th Name
+                    th Parent Code
+                    th Rating
+                    th Notes
+                each student in myClass
+                    tr
+                        td #{student.firstName} #{student.lastName}
+                        td #{student.parentCode}
+                        td #{student.numberRating}
+                        td #{student.note}
+                        td(class="editCell")
+                            a(href=`/teacher/editStudent/${student.studentId}`)
+                                img(src="/img/edit-icon.png", alt="Edit" class="editIcon")
+                        td(class="deleteCell")
+                            a(href=`/teacher/deleteStudent/${student.studentId}`)
+                                img(src="/img/trash-icon.png", alt="Edit" class="deleteIcon")
     
