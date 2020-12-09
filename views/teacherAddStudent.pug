@@ -1,12 +1,13 @@
 extends teacherLayout
 
 block content
-    form(method="POST" action="" onsubmit="return checkCreateStudent()")
-        p
-            strong First Name: <br/>
-                input(type="text" id="createStudentFName" name="fName")
-        p        
-            strong Last Name: <br/>
-                input(type="text" id="createStudentLName" name="lName")
-        p
-            input(type="submit" value="Finish")
+    div(id="teacherAdd")
+        form(method="POST" action="" onsubmit="return checkCreateStudent()")
+            p
+                strong First Name: <br/>
+                    input(type="text" id="createStudentFName" name="fName")
+            p        
+                strong Last Name: <br/>
+                    input(type="text" id="createStudentLName" name="lName")
+            p
+                input(type="submit" value="Finish" id="addStudentBtn")

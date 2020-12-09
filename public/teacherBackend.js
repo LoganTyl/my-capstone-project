@@ -7,13 +7,11 @@ const mainContent = document.getElementById("teacherMain");
 const openNav = () => {
     sideNav.style.width = "10%";
     mainContent.style.marginLeft = "10%";
-    // mainContent.style.backgroundColor = "#aaa";
 }
 
 const closeNav = () => {
     sideNav.style.width = "0%";
     mainContent.style.marginLeft = "0%";
-    // mainContent.style.backgroundColor = "#fff";
 }
 
 burgerIcon[0].addEventListener("click", openNav);

@@ -3,7 +3,7 @@ html {
     font-family: 'Nanum Myeongjo', serif;
 }
 
-/* Side Nav and Buttons */
+/* #region Side Nav and Buttons */
 .sideNav {
     height: 100%;
     width: 0;
@@ -41,8 +41,9 @@ html {
 .topBar h1 {
     margin-left: 10px;
 }
+/* #endregion */
 
-/* Sign In */
+/* #region Sign In */
 #signInDiv {
     padding: 20px;
     background-color: #B2CAD6;
@@ -77,8 +78,9 @@ html {
     text-decoration: none;
     font-weight: bold;
 }
+/* #endregion */
 
-/* Sign Up */
+/* #region Sign Up */
 #signUpDiv {
     padding: 20px;
     background-color: #B2CAD6;
@@ -113,8 +115,9 @@ html {
     text-decoration: none;
     font-weight: bold;
 }
+/* #endregion */
 
-/* Teacher Home */
+/* #region Teacher Home */
 #teacherHome{
     padding: 20px;
     background-color: #B2CAD6;
@@ -130,6 +133,7 @@ html {
 
 #teacherHomeTable th{
     font-weight: 900;
+    padding: 10px 5px;
 }
 
 #teacherHomeTable td{
@@ -145,3 +149,87 @@ html {
 .editIcon {
     margin-left: 20px;
 }
+/* #endregion */
+
+/* #region Teacher Add Student */
+#teacherAdd {
+    padding: 20px;
+    background-color: #B2CAD6;
+    text-align: center;
+    margin: 0 35%;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+#addStudentBtn {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: medium;
+    background-color: #ccc;
+    cursor: pointer;
+}
+/* #endregion */
+
+/* #region Teacher Edit Student */
+#teacherEdit {
+    padding: 20px;
+    background-color: #B2CAD6;
+    text-align: center;
+    margin: 0 35%;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+#editStudentBtn {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: medium;
+    background-color: #ccc;
+    cursor: pointer;
+}
+/* #endregion */
+
+/* #region Teacher Chat Menu */
+.chatMenuOption {
+    padding: 20px;
+    background-color: #B2CAD6;
+    text-align: center;
+    margin: 0 35%;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+.chatMenuOption a {
+    text-decoration: none;
+    font-weight: bold;
+    font-size: larger;
+}
+/* #endregion */
+
+/* #region Parent Select Student */
+.studentSelection {
+    padding: 20px;
+    background-color: #B2CAD6;
+    text-align: center;
+    margin: 0 35%;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+#enterStudentBtn {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: medium;
+    background-color: #ccc;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+#studentCodeForm {
+    margin-top: 10px;
+}
+
+/* #endregion */

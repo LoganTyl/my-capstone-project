@@ -6,5 +6,5 @@ block content
         p No students have parents registered yet. Once a parent registers, you'll see them here!
     else
         each parent in parents
-            <div class="chatMenuOption">
+            div(class="chatMenuOption")
                 a(href=`/teacher/chatroom/${parent.parentId}`) Chat with #{parent.firstName} #{parent.lastName}
