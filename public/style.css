@@ -1,7 +1,13 @@
+/* #region Site Wide Controls */
 html {
     background-color: #C6E2F0;
     font-family: 'Nanum Myeongjo', serif;
 }
+
+h1{
+    text-align: center;
+}
+/* #endregion */
 
 /* #region Side Nav and Buttons */
 .sideNav {
@@ -113,6 +119,11 @@ html {
 
 #returnToSignIn {
     text-decoration: none;
+    font-weight: bold;
+}
+
+.warning {
+    color: crimson;
     font-weight: bold;
 }
 /* #endregion */

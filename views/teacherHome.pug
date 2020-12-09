@@ -16,8 +16,8 @@ block content
                     tr
                         td #{student.firstName} #{student.lastName}
                         td #{student.parentCode}
-                        td 10
-                        td Doing well
+                        td #{student.numberRating}
+                        td #{student.note}
                         td(class="editCell")
                             a(href=`/teacher/editStudent/${student.studentId}`)
                                 img(src="/img/edit-icon.png", alt="Edit" class="editIcon")

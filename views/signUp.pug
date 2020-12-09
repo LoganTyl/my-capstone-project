@@ -12,12 +12,15 @@ block content
             p(id="passwordSignUp")      
                 strong Password: <br/>
                     input(type="text" id="signUpPassword" name="password")
+            p(id="passwordWarning" class="warning" style="display:none") Passwords must be at least 8 characters and have at least one uppercase, lowercase, and special character!
             p(id="confirmPassSignUp")    
                 strong Confirm Password: <br/>
                     input(type="text" id="signUpPasswordConfirm" name="passwordConfirm")
+            p(id="passwordConfirmWarning" class="warning" style="display:none") Passwords must match!
             p(id="emailSignUp")    
                 strong Email: <br/>
                     input(type="text" id="signUpEmail" name="email")
+            p(id="emailWarning" class="warning" style="display:none") Email addresses must be valid!
             p(id="jobSelectSignUp")
                 strong I am a: <br/>
                 

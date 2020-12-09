@@ -166,6 +166,7 @@ exports.teacherHome = (req,res) => {
     let month = months[currentDate.getMonth()];
     let day = String(currentDate.getDate()).padStart(2,'0');
     let year = currentDate.getFullYear();
+    let sqlDate = currentDate.toISOString().split('T')[0]
 
     connection.query(`SELECT * FROM teacherandstudent WHERE teacherId=${req.session.user.mySqlId}`, (err,result) => {
         if(err) throw err;
@@ -174,9 +175,15 @@ exports.teacherHome = (req,res) => {
             idRange = `${idRange}${studentID.studentId},`
         });
         idRange = idRange.slice(0,-1)+')';
-        connection.query(`SELECT * FROM student WHERE studentId IN ${idRange}`, (err,classResult,fields) => {
+        connection.query(
+            `SELECT s.*, r.* FROM student s 
+            LEFT JOIN studentandrating sr 
+            ON s.studentId = sr.studentId 
+            LEFT JOIN rating r 
+            ON r.ratingId = sr.ratingId 
+            WHERE (s.studentId IN ${idRange}) AND 
+            (r.ratingDate = ${sqlDate})`, (err,classResult) => {
             if(err) throw err;
-            // Might need to query for each student's ratings on that day
             res.render('teacherHome', {
                 title: `${req.session.user.firstName}'s Home`,
                 date: `${month} ${day}, ${year}`,

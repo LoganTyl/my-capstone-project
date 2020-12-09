@@ -12,6 +12,17 @@ const emailSignUp = document.getElementById("signUpEmail");
 const teacherSignUp = document.getElementById("signUpAsTeacher");
 const parentSignUp = document.getElementById("signUpAsParent");
 
+const passwordWarning = document.getElementById("passwordWarning");
+const passwordConfirmWarning = document.getElementById("passwordConfirmWarning");
+const emailWarning = document.getElementById("emailWarning");
+
+const passwordPattern = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$");
+// Min 8 characters, one uppercase letter, one lowercase letter, one special character
+
+const emailPattern = new RegExp("^\S+@\S+\.\S+$");
+// Must have @ and .
+
+let canSignUp = false;
 
 const checkSignIn = () => {
     if(emailSignIn.value.trim() === "" || passwordSignIn.value.trim() === "" || !(teacherSignIn.checked || parentSignIn.checked)){
@@ -28,5 +39,51 @@ const checkSignUp = () => {
     if(passwordSignUp.value !== passwordConfirmSignUp.value){
         return false;
     }
+    if(!canSignUp){
+        return false;
+    }
     return true;
 };
+
+const validateEmail = () => {
+    let emailInput = emailSignUp.value;
+    let result = emailPattern.test(emailInput);
+    if(result){
+        emailWarning.style.display = "none";
+        canSignUp = true;
+    }
+    else{
+        emailWarning.style.display = "block";
+        canSignUp = false;
+    }
+}
+
+const validatePassword = () => {
+    let passInput = passwordSignUp.value;
+    let result = passwordPattern.test(passInput);
+    if(result){
+        passwordWarning.style.display = "none";
+        canSignUp = true;
+    }
+    else{
+        passwordWarning.style.display = "block";
+        canSignUp = false;
+    }
+}
+
+const validateConfirmPassword = () => {
+    let confirmInput = passwordConfirmSignUp.value;
+    let passInput = passwordSignUp.value;
+    if(confirmInput === passInput){
+        passwordConfirmWarning.style.display = "none";
+        canSignUp = true;
+    }
+    else{
+        passwordConfirmWarning.style.display = "block";
+        canSignUp = false;
+    }
+}
+
+emailSignUp.addEventListener('input', validateEmail);
+passwordSignUp.addEventListener('input', validatePassword);
+passwordConfirmSignUp.addEventListener('input', validateConfirmPassword);
