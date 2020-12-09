@@ -433,6 +433,7 @@ exports.parentProcessEmailForm = (req,res) => {
 }
 
 exports.parentChatroom = (req,res) => {
+    let id = req.params.id;
     res.render('parentChatroom', {
         title: "Chatroom",
         id: id
