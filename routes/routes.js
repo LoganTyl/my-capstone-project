@@ -32,7 +32,7 @@ exports.root = (req,res) => {
 // Get page for signing in
 exports.signIn = (req,res) => {
     res.render('signIn', {
-        title: "Sign In"
+        title: "ECHOS Sign In"
     })
 };
 

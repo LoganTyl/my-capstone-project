@@ -1,3 +1,9 @@
+html {
+    background-color: #C6E2F0;
+    font-family: 'Nanum Myeongjo', serif;
+}
+
+/* Side Nav and Buttons */
 .sideNav {
     height: 100%;
     width: 0;
@@ -20,9 +26,122 @@
 
 .burgerIcon, .closeBtn {
     cursor: pointer;
-    font-size: 30px;
+    font-size: 50px;
 }
 
 #teacherMain, #parentMain {
     transition: margin-left .3s;
+}
+
+.topBar {
+    display: flex;
+    flex-direction: row;
+}
+
+.topBar h1 {
+    margin-left: 10px;
+}
+
+/* Sign In */
+#signInDiv {
+    padding: 20px;
+    background-color: #B2CAD6;
+    text-align: center;
+    margin: 0 35%;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+#emailSignIn, #passwordSignIn, #jobSignIn, #submitSignIn, #newAccountSignIn {
+    padding: 15px 0;
+}
+
+#emailSignIn, #passwordSignIn {
+    font-size: larger;
+}
+
+#signInAsTeacher, #signInAsParent {
+    cursor: pointer;
+}
+
+#signInBtn {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: medium;
+    background-color: #ccc;
+    cursor: pointer;
+}
+
+#newAccountSignIn {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Sign Up */
+#signUpDiv {
+    padding: 20px;
+    background-color: #B2CAD6;
+    text-align: center;
+    margin: 0 35%;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+#fNameSignUp, #lNameSignUp, #passwordSignUp, #confirmPassSignUp, #emailSignUp, #jobSelectSignUp, #submitSignUp {
+    padding: 10px 0;
+}
+
+#fNameSignUp, #lNameSignUp, #passwordSignUp, #confirmPassSignUp, #emailSignUp {
+    font-size: larger;
+}
+
+#signUpAsTeacher, #signUpAsParent {
+    cursor: pointer;
+}
+
+#signUpBtn {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: medium;
+    background-color: #ccc;
+    cursor: pointer;
+}
+
+#returnToSignIn {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Teacher Home */
+#teacherHome{
+    padding: 20px;
+    background-color: #B2CAD6;
+    text-align: center;
+    margin: 0 35%;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+#teacherHomeTable {
+    margin: 0px auto;
+}
+
+#teacherHomeTable th{
+    font-weight: 900;
+}
+
+#teacherHomeTable td{
+    margin: 0;
+    padding: 4px;
+    text-align: center;
+}
+
+.editCell {
+    display: inline-block;
+}
+
+.editIcon {
+    margin-left: 20px;
 }
